@@ -9,6 +9,13 @@ Route::get('/', function () {
 
 
 
+Route::prefix('admin')->group(function () {
+    Route::view('/products', 'admin.products')->name('admin.products');
+    Route::view('/categories', 'admin.categories')->name('admin.categories');
+    Route::view('/orders', 'admin.orders')->name('admin.orders');
+    Route::view('/addproduct', 'admin.products.addproduct')->name('admin.product');
+    Route::view('/editproduct', 'admin.products.editproduct')->name('admin.product');
+});
 
 
 

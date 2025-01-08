@@ -1,4 +1,11 @@
-/*Template Name: Fruitkha - Responsive Bootstrap4 Shop TemplateTemplate URI: Description: Bootstrap template for fruits or any other kind of shopAuthor: Imran HossainAuthor URI: https://imransdesign.com/Version: 1.0*/
+/*
+Template Name: Fruitkha - Responsive Bootstrap4 Shop Template
+Template URI: 
+Description: Bootstrap template for fruits or any other kind of shop
+Author: Imran Hossain
+Author URI: https://imransdesign.com/
+Version: 1.0
+*/
 /* -----------------------------------------------------------------------------
 
 # Base - Genral & Typography
@@ -331,7 +338,7 @@ p:last-child {
 }
 
 .pt-80 {
-  padding-top: 80px;
+  padding-top: 140px;
 }
 
 @media only screen and (max-width: 767.96px) {
@@ -522,6 +529,7 @@ ul.navbar-nav li.nav-item a.nav-link, ul.navbar-nav li.nav-item.active a.nav-lin
   z-index: 999;
   width: 100%;
   padding: 25px 0;
+  background-color:  #051922;
 }
 
 .top-header-area.white ul.navbar-nav li.nav-item a.nav-link, .top-header-area.white ul.navbar-nav li.nav-item.active a.nav-link {
@@ -556,21 +564,18 @@ nav.main-menu ul li a {
 }
 
 nav.main-menu ul > li {
-  position: relative;
+  position: static;
 }
 
 nav.main-menu ul ul.sub-menu {
   position: absolute;
-  background-color: #fff;
+  background-color: #555;
   width: 220px;
   padding: 15px 15px;
   margin: 0;
   left: 0;
   top: 50px;
-  border-radius: 3px;
-  -webkit-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+  
   opacity: 0;
   visibility: hidden;
   -webkit-box-shadow: 0 0 20px #555555;
@@ -691,16 +696,14 @@ nav.main-menu li:hover > a {
 }
 
 nav.main-menu li a {
-  -webkit-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+  
 }
 
 .top-header-area .header-icons a {
-  -webkit-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
+
+  
 }
+
 
 .top-header-area .header-icons a:hover {
   color: #F28123;
@@ -765,6 +768,8 @@ span.close-btn {
 a.mobile-show {
   display: none;
 }
+
+
 
 .search-area .search-bar div.search-bar-tablecell {
   display: table-cell;

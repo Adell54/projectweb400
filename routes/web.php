@@ -4,16 +4,14 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-
-
-
-
-Route::get('/home', function () {
     return view('home');
 });
+
+
+
+
+
+
 
 Route::get('/about', function () {
     return view('about');
@@ -35,8 +33,18 @@ Route::get('/checkout', function () {
     return view('checkout');
 });
 
+Route::get('/categories', function () {
+    return view('categories');
+});
+
+Route::get('/home', function () {
+    return view('home');
+});
 
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/history', [ProfileController::class, 'purchasehistory'])->name('profile.history');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

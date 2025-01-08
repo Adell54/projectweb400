@@ -4,13 +4,13 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	<meta name="description" content="Responsive E-commerce Website">
 
 	<!-- title -->
-	<title>Web400</title>
+	<title>Supermarket</title>
 
 	<!-- favicon -->
-	
+			
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -48,101 +48,122 @@
 			<div class="row">
 				<div class="col-lg-12 col-sm-12 text-center">
 					<div class="main-menu-wrap">
-					
+						<!-- Menu Start -->
+<nav class="main-menu">
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/categories">Categories</a></li>
+        <li><a href="/about">About</a></li>
+        <li>
+            <div class="header-icons">
+                <a class="shopping-cart" href="/cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge" id="cart-item-count">3</span> <!-- Replace 3 with dynamic count -->
+                </a>
 
-						<!-- menu start -->
-						<nav class="main-menu">
-							<ul>
-								<li class="/home"><a href="#">Home</a></li>
-								<li><a href="/products">Products</a></li>
-								<li><a href="/about">About</a></li>
+                @auth
+                <!-- Display Username if Logged In -->
+                <a class="mobile-hide" href="/profile">
+                    <i class="fas fa-user"></i> {{ Auth::user()->name }}
+                </a>
+                @else
+                <!-- Login/Register Button if Not Logged In -->
+                <a class="mobile-hide" href="#" data-toggle="modal" data-target="#loginModal">
+                    <i class="fas fa-sign-in-alt"></i> Login/Register
+                </a>
+                @endauth
+            </div>
+        </li>
+    </ul>
+</nav>
+<div class="mobile-menu"></div>
+<!-- Menu End -->
 
-								
-								<li>
-									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-										<!-- Login Button -->
-										<a class="mobile-hide" href="#" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login/Register</a>
-									</div>
-								</li>
-							</ul>
-						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
-						<!-- menu end -->
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
 	<!-- end header -->
 
-	<!-- Login Modal -->
-	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="loginModalLabel">Login</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form action="login.php" method="POST">
-						<div class="form-group">
-							<label for="username">Username</label>
-							<input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
-						</div>
-						<div class="form-group">
-							<label for="password">Password</label>
-							<input type="password" class="form-control" id="password" name="password" placeholder="Password">
-						</div>
-						<button type="submit" class="btn btn-primary">Login</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end search area -->
+<!-- Login/Register Modal -->
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login/Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabs for Login and Register -->
+                <ul class="nav nav-tabs" id="loginRegisterTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="loginRegisterTabContent">
+                    <!-- Login Tab -->
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                        <form action="{{ route('login') }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter E-mail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">Remember Me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    </div>
+
+                    <!-- Register Tab -->
+                    <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                        <form action="{{ route('register') }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password-confirm">Confirm Password</label>
+                                <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="Confirm password" required>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 	
+	
 
-	<!-- hero area -->
-	<div class="hero-area hero-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-9 offset-lg-2 text-center">
-					<div class="hero-text">
-						<div class="hero-text-tablecell">
-							<p class="subtitle">Fresh & Organic</p>
-							<h1>Delicious Seasonal Fruits</h1>
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end hero area -->
+  
  
 
    @yield('content')

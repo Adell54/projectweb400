@@ -10,9 +10,33 @@ Route::get('/', function () {
 
 
 
-Route::get('/test', function () {
-    return view('test');
+
+Route::get('/home', function () {
+    return view('home');
 });
+
+Route::get('/about', function () {
+    return view('about');
+});
+
+Route::get('/cart', function () {
+    return view('cart');
+});
+
+Route::get('/products', function () {
+    return view('products');
+});
+
+Route::get('/singleproduct', function () {
+    return view('singleproduct');
+});
+
+Route::get('/checkout', function () {
+    return view('checkout');
+});
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -25,3 +49,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+

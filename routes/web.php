@@ -10,11 +10,14 @@ Route::get('/', function () {
 
 
 Route::prefix('admin')->group(function () {
+    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
     Route::view('/products', 'admin.products')->name('admin.products');
     Route::view('/categories', 'admin.categories')->name('admin.categories');
     Route::view('/orders', 'admin.orders')->name('admin.orders');
     Route::view('/addproduct', 'admin.products.addproduct')->name('admin.product');
     Route::view('/editproduct', 'admin.products.editproduct')->name('admin.product');
+    Route::view('/addcategories', 'admin.categories.addcategory')->name('admin.categories');
+    Route::view('/editcategories', 'admin.categories.editcategory')->name('admin.categories');
 });
 
 
@@ -47,6 +50,8 @@ Route::get('/categories', function () {
 Route::get('/home', function () {
     return view('home');
 });
+
+
 
 
 Route::middleware('auth')->group(function () {

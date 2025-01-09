@@ -15,76 +15,129 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-color: #f8f9fa;
         }
 
-        #sidebar {
+        #wrapper {
+            display: flex;
+            width: 100%;
             min-height: 100vh;
+        }
+
+        #sidebar-wrapper {
+            width: 250px;
             background-color: #343a40;
+            flex-shrink: 0;
+            transition: all 0.3s;
         }
 
-        #sidebar a {
-            color: #fff;
-            text-decoration: none;
+        #sidebar-wrapper.collapsed {
+            width: 70px;
         }
 
-        #sidebar a:hover {
+        #sidebar-wrapper .sidebar-heading {
+            padding: 20px;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #sidebar-wrapper .list-group {
+            width: 100%;
+        }
+
+        #sidebar-wrapper .list-group-item {
+            background-color: #343a40;
+            color: #adb5bd;
+            border: none;
+        }
+
+        #sidebar-wrapper .list-group-item:hover, #sidebar-wrapper .list-group-item.active {
             background-color: #495057;
+            color: #ffffff;
         }
 
-        #sidebar .active {
-            background-color: #007bff;
+        #sidebar-wrapper .list-group-item i {
+            margin-right: 10px;
         }
 
-        #content {
+        #sidebar-wrapper.collapsed .list-group-item {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        #sidebar-wrapper.collapsed .list-group-item i {
+            margin-right: 0;
+        }
+
+        #sidebar-wrapper.collapsed .list-group-item span {
+            display: none;
+        }
+
+        #page-content-wrapper {
             flex: 1;
             padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        #wrapper.collapsed #page-content-wrapper {
+            margin-left: 70px;
+        }
+
+        #menu-toggle {
+            position: absolute;
+            top: 15px;
+            left: 250px;
+            background-color: #343a40;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: left 0.3s;
+        }
+
+        #wrapper.collapsed #menu-toggle {
+            left: 70px;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-                <div class="position-sticky">
-                    <div class="sidebar-heading text-white text-center py-3 fs-4">
-                        Admin Panel
-                    </div>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a href="/admin/products" class="nav-link {{ request()->is('admin/products') ? 'active' : '' }}">
-                                <i class="fas fa-box me-2"></i> Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/categories" class="nav-link {{ request()->is('admin/categories') ? 'active' : '' }}">
-                                <i class="fas fa-tags me-2"></i> Categories
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/orders" class="nav-link {{ request()->is('admin/orders') ? 'active' : '' }}">
-                                <i class="fas fa-shopping-cart me-2"></i> Orders
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" class="bg-dark">
+            <div class="sidebar-heading" onclick="toggleMenu()">
+                Admin Panel
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="/admin/dashboard" class="list-group-item list-group-item-action {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="/admin/products" class="list-group-item list-group-item-action {{ request()->is('admin/products') ? 'active' : '' }}">
+                    <i class="fas fa-box"></i> <span>Products</span>
+                </a>
+                <a href="/admin/categories" class="list-group-item list-group-item-action {{ request()->is('admin/categories') ? 'active' : '' }}">
+                    <i class="fas fa-tags"></i> <span>Categories</span>
+                </a>
+                <a href="/admin/orders" class="list-group-item list-group-item-action {{ request()->is('admin/orders') ? 'active' : '' }}">
+                    <i class="fas fa-shopping-cart"></i> <span>Orders</span>
+                </a>
+            </div>
+        </div>
 
-            <!-- Page Content -->
-            <main id="content" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-4">
-                    <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
-                        Toggle Sidebar
-                    </button>
-                    <span class="navbar-brand mb-0 h1">Admin Dashboard</span>
-                </nav>
-
-                @yield('content')
-            </main>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          
+            @yield('content')
         </div>
     </div>
 
     <!-- Bootstrap Bundle -->
     <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById('wrapper').classList.toggle('collapsed');
+            document.getElementById('sidebar-wrapper').classList.toggle('collapsed');
+        }
+    </script>
 </body>
 </html>

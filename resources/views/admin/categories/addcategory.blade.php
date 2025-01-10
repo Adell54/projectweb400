@@ -10,15 +10,16 @@
                     <h4 class="mb-0">Add New Category</h4>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
+                        @csrf
                         <div class="form-group">
                             <label for="categoryName">Category Name</label>
-                            <input type="text" id="categoryName" class="form-control" placeholder="Enter category name" required>
+                            <input type="text" id="categoryName" name="name" class="form-control" placeholder="Enter category name" required>
                         </div>
 
                         <div class="form-group">
                             <label for="categoryImage">Category Image</label>
-                            <input type="file" id="categoryImage" class="form-control" onchange="previewImage()">
+                            <input type="file" id="categoryImage" name="image" class="form-control" onchange="previewImage()">
                         </div>
 
                         <div class="form-group">
@@ -27,12 +28,12 @@
 
                         <div class="form-group">
                             <label for="categoryDescription">Description</label>
-                            <textarea id="categoryDescription" class="form-control" rows="4" placeholder="Enter category description"></textarea>
+                            <textarea id="categoryDescription" name="description" class="form-control" rows="4" placeholder="Enter category description"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="categoryStatus">Status</label>
-                            <select id="categoryStatus" class="form-control">
+                            <select id="categoryStatus" name="enabled" class="form-control">
                                 <option value="1">Enabled</option>
                                 <option value="0">Disabled</option>
                             </select>

@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\CategoryController;
 
-Route::resource('categories', CategoryController::class);
+
+
+
+
+// User Routes :
+
 
 
 Route::get('/', function () {
@@ -16,42 +21,32 @@ Route::get('/', function () {
 });
 
 
-Route::prefix('admin')->group(function () {
-    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-    Route::view('/products', 'admin.products')->name('admin.products');
-    Route::view('/orders', 'admin.orders')->name('admin.orders');
-    Route::view('/addproduct', 'admin.products.addproduct')->name('admin.product');
-    Route::view('/editproduct', 'admin.products.editproduct')->name('admin.product');
-
-    // Use resource route for CategoryController
-    Route::resource('categories', CategoryController::class)->names([
-        'index' => 'admin.categories.index',
-        'create' => 'admin.categories.create',
-        'store' => 'admin.categories.store',
-        'show' => 'admin.categories.show',
-        'edit' => 'admin.categories.edit',
-        'update' => 'admin.categories.update',
-        'destroy' => 'admin.categories.destroy',
-    ]);
+Route::get('/home', function () {
+    return view('home');
 });
 
 
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
+
+Route::resource('categories', CategoryController::class);
 
 
 Route::get('/about', function () {
     return view('about');
 });
 
+
 Route::get('/cart', function () {
     return view('cart');
 });
 
-Route::get('/products',[ProductController::class,'index']);
 
 Route::get('/singleproduct', function () {
     return view('singleproduct');
 });
+
+
 
 Route::get('/checkout', function () {
     return view('checkout');
@@ -59,12 +54,38 @@ Route::get('/checkout', function () {
 
 
 
-Route::get('/home', function () {
-    return view('home');
+
+
+
+
+//Admin Routes :
+
+Route::prefix('admin')->group(function () {
+    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::view('/orders', 'admin.orders')->name('admin.orders');
+    
+    // Routes for Products
+    Route::get('/products', [ProductController::class,'adminview'])->name('admin.products');
+    
+
+    Route::get('/addproduct', [ProductController::class,'create'])->name('admin.addproduct');
+    Route::post('/addproduct', [ProductController::class, 'store'])->name('admin.addproduct.store'); // Add this line
+    Route::view('/editproduct', 'admin.products.editproduct')->name('admin.editproduct');
+    
+    // Routes for Categories
+    Route::get('/categories', [CategoryController::class,'adminview'])->name('category');
+    Route::get('/categories/addcategory', [CategoryController::class,'create'])->name('addcategory');
+    Route::get('/categories/editcategory/{id}', [CategoryController::class, 'edit'])->name('admin.categories.editcategory');
+    Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 
 
+
+
+
+
+// Breeze Routes:
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/history', [ProfileController::class, 'purchasehistory'])->name('profile.history');

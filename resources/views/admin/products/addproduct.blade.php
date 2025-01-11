@@ -1,6 +1,9 @@
 @extends('admin.layout')
 
 @section('content')
+
+
+
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-md-8 mx-auto">
@@ -10,15 +13,16 @@
                     <h4 class="mb-0">Add New Product</h4>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('admin.addproduct')}}" enctype="multipart/form-data">
+                        @csrf
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" id="productName" class="form-control" placeholder="Enter product name" required>
+                            <input type="text" id="productName" name="name" class="form-control" placeholder="Enter product name" required>
                         </div>
 
                         <div class="form-group">
                             <label for="productImages">Product Images</label>
-                            <input type="file" id="productImages" class="form-control" multiple onchange="previewImages()">
+                            <input type="file" id="productImages" name="image" class="form-control"  onchange="previewImages()">
                         </div>
 
                         <div class="form-group">
@@ -27,32 +31,34 @@
 
                         <div class="form-group">
                             <label for="productQuantity">Quantity</label>
-                            <input type="number" id="productQuantity" class="form-control" placeholder="Enter quantity" min="1" required>
+                            <input type="number" id="productQuantity" name="quantity" class="form-control" placeholder="Enter quantity" min="1" required>
                         </div>
 
                         <div class="form-group">
                             <label for="productPrice">Price</label>
-                            <input type="number" id="productPrice" class="form-control" placeholder="Enter price" step="0.01" min="0" required>
+                            <input type="number" id="productPrice" name="price" class="form-control" placeholder="Enter price" step="0.01" min="0" required>
                         </div>
 
                         <div class="form-group">
                             <label for="productCategory">Category</label>
-                            <select id="productCategory" class="form-control">
+                            <select id="productCategory" name="category" class="form-control">                             
                                 <option value="">Select a category</option>
-                                <option value="1">Electronics</option>
-                                <option value="2">Clothing</option>
-                                <option value="3">Books</option>
+                                @foreach ($categories as $item)
+                                    <option value="{{ $item->id }}">{{$item->name}}</option>
+                                @endforeach
+                                
+                               
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="productDescription">Description</label>
-                            <textarea id="productDescription" class="form-control" rows="4" placeholder="Enter product description"></textarea>
+                            <textarea id="productDescription" name="description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="productStatus">Status</label>
-                            <select id="productStatus" class="form-control">
+                            <select id="productStatus" name="enabled" class="form-control">
                                 <option value="1">Enabled</option>
                                 <option value="0">Disabled</option>
                             </select>
@@ -70,26 +76,24 @@
 </div>
 
 <script>
-    function previewImages() {
+    function previewImage() {
         const preview = document.getElementById('imagePreview');
-        const files = document.getElementById('productImages').files;
+        const file = document.getElementById('categoryImage').files[0];
         
         preview.innerHTML = '';
-        
-        if (files) {
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                
-                reader.onload = (e) => {
-                    const imgElement = document.createElement('img');
-                    imgElement.src = e.target.result;
-                    imgElement.className = 'img-thumbnail m-2';
-                    imgElement.style.width = '100px';
-                    preview.appendChild(imgElement);
-                };
-                
-                reader.readAsDataURL(file);
-            });
+
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.className = 'img-thumbnail';
+                imgElement.style.width = '150px';
+                preview.appendChild(imgElement);
+            };
+            
+            reader.readAsDataURL(file);
         }
     }
 </script>

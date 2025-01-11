@@ -65,25 +65,7 @@
                                     </button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>
-                                    <img src="https://via.placeholder.com/50" alt="Product Image" class="img-thumbnail" style="width: 50px;">
-                                </td>
-                                <td>Running Shoes</td>
-                                <td>$79.99</td>
-                                <td>120</td>
-                                <td>Clothing</td>
-                                <td><span class="badge badge-danger">Disabled</span></td>
-                                <td>
-                                    <a href="{{ url('/admin/editproduct/2') }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('Running Shoes')">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </td>
-                            </tr>
+                           
                             <!-- Add more rows as necessary -->
                         </tbody>
                     </table>

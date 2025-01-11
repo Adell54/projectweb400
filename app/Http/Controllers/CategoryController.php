@@ -23,12 +23,27 @@ class CategoryController extends Controller
         return view('categories', ['categories' => $categories]);
     }
 
+
+
+    public function adminview()
+    {
+        $categories = Category::all();
+        
+        foreach ($categories as $category) {
+            if ($category->image) {
+                $category->image = base64_encode($category->image);
+            }
+        }
+       
+        return view('admin.categories', ['categories' => $categories]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.categories.addcategory');
+       return view('admin.categories.addcategory');
     }
 
     /**
@@ -38,8 +53,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image',
-            'description' => 'nullable|string',
+            'image' => 'required|image',
+            'description' => 'required|string',
             'enabled' => 'required|boolean',
         ]);
 
@@ -52,7 +67,7 @@ class CategoryController extends Controller
         $category->enabled = $request->enabled;
         $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('category')->with('success', 'Category created successfully.');
     }
 
     /**
@@ -74,7 +89,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
-        return view('categories.edit', ['category' => $category]);
+        
+        return view('admin.categories.editcategory', ['category' => $category]);
     }
 
     /**
@@ -98,7 +114,7 @@ class CategoryController extends Controller
         $category->enabled = $request->enabled;
         $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('adminview')->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -109,6 +125,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('adminview')->with('success', 'Category deleted successfully.');
     }
 }

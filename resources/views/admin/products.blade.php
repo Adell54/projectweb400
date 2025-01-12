@@ -12,29 +12,28 @@
                 </a>
             </div>
 
-            <!-- Search Bar -->
+            <!-- Total Items -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <form>
-                        <div class="input-group">
+                    <div class="d-flex justify-content-between">
+                        <span>Total Products: {{ $totalProducts }}</span>
+                        <div class="input-group" style="width: 300px;">
                             <input type="text" class="form-control" placeholder="Search products by name..." id="searchProducts">
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-primary">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
+                            <button type="button" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Products Table -->
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <table class="table table-hover table-striped">
                         <thead class="thead-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>#</th> <!-- Sequence number -->
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Price</th>
@@ -45,79 +44,81 @@
                             </tr>
                         </thead>
                         <tbody id="productTable">
-                            <!-- Dummy Data -->
-                            <tr>
-                                <td>1</td>
+                            @foreach ($products as $index => $product)
+                            <tr id="product-row-{{ $product->id }}">
+                                <td>{{ $index + 1 + ($products->currentPage() - 1) * $products->perPage() }}</td> <!-- Sequence number adjusted for pagination -->
                                 <td>
-                                    <img src="https://via.placeholder.com/50" alt="Product Image" class="img-thumbnail" style="width: 50px;">
+                                    @if ($product->image)
+                                        <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 150px; height: 150px;">
+                                    @else
+                                        <img src="https://via.placeholder.com/150" alt="No image" class="img-thumbnail" style="width: 150px; height: 150px;">
+                                    @endif
                                 </td>
-                                <td>Smartphone</td>
-                                <td>$499.99</td>
-                                <td>50</td>
-                                <td>Electronics</td>
-                                <td><span class="badge badge-success">Enabled</td>
+                                <td>{{ $product->name }}</td>
+                                <td>${{ $product->price }}</td>
+                                <td>{{ $product->quantity }}</td>
+                                <td>{{ $categoryMap[$product->category_id] ?? 'N/A' }}</td>
                                 <td>
-                                    <a href="{{ url('/admin/editproduct/1') }}" class="btn btn-warning btn-sm">
+                                    <span class="badge {{ $product->enabled ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $product->enabled ? 'Enabled' : 'Disabled' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.editproduct', $product->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('Smartphone')">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                                    <form method="POST" action="" id="delete-form-{{ $product->id }}" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
-                           
-                            <!-- Add more rows as necessary -->
+                            @endforeach
                         </tbody>
                     </table>
+
+                    <!-- Pagination Links -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $products->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this product? This action cannot be undone. Please type the product name to confirm.
-                <input type="text" id="confirmProductName" class="form-control mt-2" placeholder="Type product name to confirm delete" >
-                <input type="hidden" id="productNameToDelete">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Bootstrap and jQuery dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<!-- Custom CSS -->
+<style>
+    .description-cell {
+        max-width: 300px;
+        word-wrap: break-word;
+        padding: 10px;
+    }
+    .img-thumbnail {
+        width: 150px;
+        height: 150px;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa; /* Light background on hover */
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2; /* Light gray background for striped rows */
+    }
+    .table td, .table th {
+        vertical-align: middle; /* Center align text vertically */
+    }
+    .table .btn {
+        margin: 2px; /* Add some space between buttons */
+    }
+</style>
 
 <script>
-    function confirmDelete(productName) {
-        document.getElementById('confirmProductName').value = '';
-        document.getElementById('productNameToDelete').value = productName;
-        $('#confirmDeleteModal').modal('show');
-    }
-
-    function deleteProduct() {
-        const confirmProductName = document.getElementById('confirmProductName').value;
-        const productNameToDelete = document.getElementById('productNameToDelete').value;
-
-        if (confirmProductName === productNameToDelete) {
-            // Perform the delete action
-            alert('Product ' + productNameToDelete + ' deleted successfully.');
-            $('#confirmDeleteModal').modal('hide');
-        } else {
-            alert('Product name does not match. Deletion cancelled.');
+    function confirmDelete(productId, productName) {
+        if (confirm("Do you really want to delete this product?")) {
+            document.getElementById(`delete-form-${productId}`).submit();
         }
     }
 </script>

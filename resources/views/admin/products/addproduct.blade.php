@@ -21,8 +21,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="productImages">Product Images</label>
-                            <input type="file" id="productImages" name="image" class="form-control"  onchange="previewImages()">
+                            <label for="productImage">Product Image</label>
+                            <input type="file" id="productImage" name="image" class="form-control"  onchange="previewImages()">
                         </div>
 
                         <div class="form-group">
@@ -78,7 +78,7 @@
 <script>
     function previewImage() {
         const preview = document.getElementById('imagePreview');
-        const file = document.getElementById('categoryImage').files[0];
+        const file = document.getElementById('productImage').files[0];
         
         preview.innerHTML = '';
 

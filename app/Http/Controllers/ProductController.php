@@ -39,19 +39,20 @@ class ProductController extends Controller
 }
 
 
-    public function adminview()
-    {
-        $products= Product::all();
-        $categories = Category::select('id', 'name')->get();
-        $categoryMap = $categories->pluck('name', 'id');
-         
-        foreach ($products as $product) {
-            if ($product->image) {
-                $product->image = base64_encode($product->image);
-            }}
-
-            return view('admin.products',["products"=>$products ,'categoryMap' => $categoryMap]);
+public function adminview()
+{
+    $products = Product::paginate(10);
+    $categories = Category::select('id', 'name')->get();
+    $categoryMap = $categories->pluck('name', 'id');
+     
+    foreach ($products as $product) {
+        if ($product->image) {
+            $product->image = base64_encode($product->image);
+        }
     }
+
+    return view('admin.products', ['products' => $products, 'categoryMap' => $categoryMap, 'totalProducts' => Product::count()]);
+}
 
 
 

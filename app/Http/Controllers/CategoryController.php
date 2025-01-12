@@ -114,7 +114,7 @@ class CategoryController extends Controller
         $category->enabled = $request->enabled;
         $category->save();
 
-        return redirect()->route('adminview')->with('success', 'Category updated successfully.');
+        return redirect()->route('category')->with('success', 'Category updated successfully.');
     }
 
     /**

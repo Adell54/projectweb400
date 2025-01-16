@@ -157,7 +157,7 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="single-product-item">
                             <div class="product-image">
-                                <a href="singleproduct">
+                                <a href="{{route('products.show',$product->id)}}">
                                     <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}"
                                         class="img-fluid">
                                 </a>

@@ -85,7 +85,43 @@
         }
     }
 </style>
+<div class="mt-100 mb-100">
+<div class="container">
+    <div class="card">
+        <div class="card-header">Admin Access</div>
+        <div class="card-body">
+            
+<form>
 
+              <!-- Username Section -->
+              
+              <div class="form-group mb-3">
+                  <label for="name" class="form-label">Admin Password</label>
+                  <input type="text" name="name" class="form-control" >
+              </div>
+              <button class="btn btn-primary">Log in as admin</button>
+
+                
+
+
+                </form>
+                
+                
+
+                
+
+               
+
+                
+            
+           
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="mt-20 mb-20">
 <div class="container">
     <div class="card">
         <div class="card-header">Edit Profile</div>
@@ -129,5 +165,6 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 @endsection

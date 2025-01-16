@@ -16,18 +16,14 @@ use App\Http\Controllers\CategoryController;
 
 
 
-Route::get('/', function () {
-    return view('home');
-});
 
 
-Route::get('/home', function () {
-    return view('home');
-});
-
+Route::get('/home', [ProductController::class, 'home'])->name('home.index');
+Route::get('/', [ProductController::class, 'home'])->name('home.index');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
 Route::resource('categories', CategoryController::class);
 
@@ -42,9 +38,7 @@ Route::get('/cart', function () {
 });
 
 
-Route::get('/singleproduct', function () {
-    return view('singleproduct');
-});
+
 
 
 
@@ -69,8 +63,9 @@ Route::prefix('admin')->group(function () {
     
 
     Route::get('/addproduct', [ProductController::class,'create'])->name('admin.addproduct');
-    Route::post('/addproduct', [ProductController::class, 'store'])->name('admin.addproduct.store'); // Add this line
+    Route::post('/addproduct', [ProductController::class, 'store'])->name('admin.addproduct.store'); 
     Route::view('/editproduct', 'admin.products.editproduct')->name('admin.editproduct');
+    Route::delete('/products/delete/{id}', [CategoryController::class, 'destroy'])->name('products.destroy');
     
     // Routes for Categories
     Route::get('/categories', [CategoryController::class,'adminview'])->name('category');

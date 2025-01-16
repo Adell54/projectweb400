@@ -70,7 +70,7 @@
                                     <form method="POST" action="" id="delete-form-{{ $product->id }}" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }},  )">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </form>
@@ -81,7 +81,7 @@
                     </table>
 
                     <!-- Pagination Links -->
-                    <div class="d-flex justify-content-center mt-4">
+                    <div class="btn d-flex justify-content-center mt-4">
                         {{ $products->links() }}
                     </div>
                 </div>
@@ -116,7 +116,7 @@
 </style>
 
 <script>
-    function confirmDelete(productId, productName) {
+    function confirmDelete(productId) {
         if (confirm("Do you really want to delete this product?")) {
             document.getElementById(`delete-form-${productId}`).submit();
         }

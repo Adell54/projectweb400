@@ -300,6 +300,24 @@ p:last-child {
   }
 }
 
+
+@media only screen and (max-width: 767.96px) {
+  .mt-80 {
+    margin-top: 50px;
+  }
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 767.96px) {
+  .mb-20 {
+    margin-bottom: 10px;
+  }
+}
+
+
 .mt-100 {
   margin-top: 100px;
 }

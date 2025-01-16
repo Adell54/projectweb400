@@ -23,12 +23,12 @@
 						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
 						      <div class="card-body">
 						        <div class="billing-address-form">
+									<h4 class="text-center">Please Fill in your address and the rest of your contact information: </h4>
 						        	<form action="index.html">
-						        		<p><input type="text" placeholder="Name"></p>
-						        		<p><input type="email" placeholder="Email"></p>
+						        		
 						        		<p><input type="text" placeholder="Address"></p>
 						        		<p><input type="tel" placeholder="Phone"></p>
-						        		<p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
+						        		
 						        	</form>
 						        </div>
 						      </div>
@@ -74,14 +74,7 @@
 									<td>Strawberry</td>
 									<td>$85.00</td>
 								</tr>
-								<tr>
-									<td>Berry</td>
-									<td>$70.00</td>
-								</tr>
-								<tr>
-									<td>Lemon</td>
-									<td>$35.00</td>
-								</tr>
+								
 							</tbody>
 							<tbody class="checkout-details">
 								<tr>
@@ -90,7 +83,7 @@
 								</tr>
 								<tr>
 									<td>Shipping</td>
-									<td>$50</td>
+									<td>$30</td>
 								</tr>
 								<tr>
 									<td>Total</td>

@@ -26,6 +26,7 @@ class ProductController extends Controller
         $query->where('category_id', $request->category);
     }
 
+
     // Paginate results
     $products = $query->paginate(9);
     $categories = Category::select('id', 'name')->get();
@@ -39,17 +40,40 @@ class ProductController extends Controller
 }
 
 
+public function home(Request $request)
+{
+    $query = Product::query();
+
+    // Handle search
+    if ($request->has('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    // Handle category filter
+    if ($request->has('category')) {
+        $query->where('category_id', $request->category);
+    }
+    // Paginate results
+    $products = $query->paginate(9);
+    $categories = Category::select('id', 'name')->get();
+    $categoryMap = $categories->pluck('name', 'id');
+
+    return view('home', [
+        'products' => $products,
+        'categoryMap' => $categoryMap,
+        'categories' => $categories,
+    ]);
+}
+
+
+
 public function adminview()
 {
     $products = Product::paginate(10);
     $categories = Category::select('id', 'name')->get();
     $categoryMap = $categories->pluck('name', 'id');
      
-    foreach ($products as $product) {
-        if ($product->image) {
-            $product->image = base64_encode($product->image);
-        }
-    }
+  
 
     return view('admin.products', ['products' => $products, 'categoryMap' => $categoryMap, 'totalProducts' => Product::count()]);
 }
@@ -120,7 +144,11 @@ public function adminview()
      */
     public function show(string $id)
     {
-        //
+        $product= Product::findOrFail($id);
+        
+       
+    
+        return view('singleproduct',['product'=>$product]);
     }
 
     /**
@@ -144,6 +172,9 @@ public function adminview()
      */
     public function destroy(string $id)
     {
-        //
+        $product= Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('admin.products')->with('success', 'Category deleted successfully.');
     }
 }

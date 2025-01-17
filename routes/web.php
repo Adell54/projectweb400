@@ -20,33 +20,29 @@ use App\Http\Controllers\CategoryController;
 
 Route::get('/home', [ProductController::class, 'home'])->name('home.index');
 Route::get('/', [ProductController::class, 'home'])->name('home.index');
-
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
 Route::resource('categories', CategoryController::class);
-
 
 Route::get('/about', function () {
     return view('about');
 });
 
 
+
+
+
+// Cart/Checkout Routes:
+Route::middleware(['auth'])->group(function () {
+
 Route::get('/cart', function () {
     return view('cart');
 });
-
-
-
-
-
-
 Route::get('/checkout', function () {
     return view('checkout');
 });
 
-
+});
 
 
 

@@ -57,7 +57,7 @@
             <div class="row">
                 @foreach ($categories as $item)
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <a href="" class="text-decoration-none">
+                        <a href="products?category={{$item->id}}" class="text-decoration-none">
                             <div class="card text-center shadow-sm h-100 d-flex flex-column">
                                 <img src="data:image/jpeg;base64,{{ $item->image }}" alt="{{ $item->name }}" class="card-img-top img-fluid">
                                 <div class="card-body d-flex flex-column">

@@ -125,6 +125,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('adminview')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories')->with('success', 'Category deleted successfully.');
     }
 }

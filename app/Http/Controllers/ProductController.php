@@ -28,7 +28,7 @@ class ProductController extends Controller
 
 
     // Paginate results
-    $products = $query->paginate(9);
+    $products = $query->paginate(5);
     $categories = Category::select('id', 'name')->get();
     $categoryMap = $categories->pluck('name', 'id');
 
@@ -144,11 +144,14 @@ public function adminview()
      */
     public function show(string $id)
     {
-        $product= Product::findOrFail($id);
+        $singleproduct= Product::findOrFail($id);
+        $products=Product::all();
+        $category = Category::select('id', 'name')->get();
+    $categoryMap = $category->pluck('name', 'id');
         
        
     
-        return view('singleproduct',['product'=>$product]);
+        return view('productdetails',['products'=>$products,'product'=>$singleproduct,'category'=>$category,'categoryMap' => $categoryMap,]);
     }
 
     /**

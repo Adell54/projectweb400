@@ -11,25 +11,26 @@
 
 	<!-- favicon -->
 			
-	<!-- google font -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-	<!-- fontawesome -->
-	<link rel="stylesheet" href="assets/css/all.min.css">
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="assets/css/owl.carousel.css">
-	<!-- magnific popup -->
-	<link rel="stylesheet" href="assets/css/magnific-popup.css">
-	<!-- animate css -->
-	<link rel="stylesheet" href="assets/css/animate.css">
-	<!-- mean menu css -->
-	<link rel="stylesheet" href="assets/css/meanmenu.min.css">
-	<!-- main style -->
-	<link rel="stylesheet" href="assets/css/main.css">
-	<!-- responsive -->
-	<link rel="stylesheet" href="assets/css/responsive.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+
+<!-- fontawesome -->
+<link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
+<!-- bootstrap -->
+<link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
+<!-- owl carousel -->
+<link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.css') }}">
+<!-- magnific popup -->
+<link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.css') }}">
+<!-- animate css -->
+<link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
+<!-- mean menu css -->
+<link rel="stylesheet" href="{{ asset('assets/css/meanmenu.min.css') }}">
+<!-- main style -->
+<link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+<!-- responsive -->
+<link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
 
 </head>
 <body>
@@ -57,7 +58,7 @@
         <li><a href="/about">About</a></li>
         <li>
             <div class="header-icons">
-                <a class="shopping-cart" href="/cart">
+                <a class="shopping-cart" href="#" id="cart-button">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge" id="cart-item-count">3</span> <!-- Replace 3 with dynamic count -->
                 </a>
@@ -161,10 +162,7 @@
 </div>
 
 	
-	
-
   
- 
 
    @yield('content')
 
@@ -191,7 +189,6 @@
 					</div>
 				</div>
 				
-				
 			</div>
 		</div>
 	</div>
@@ -212,26 +209,47 @@
 	</div>
 	<!-- end copyright -->
 	
-	<!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="assets/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="assets/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="assets/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="assets/js/jquery.magnific-popup.min.js"></script>
-	<!-- mean menu -->
-	<script src="assets/js/jquery.meanmenu.min.js"></script>
-	<!-- sticker js -->
-	<script src="assets/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="assets/js/main.js"></script>
+	<!-- jQuery -->
+<script src="{{ asset('assets/js/jquery-1.11.3.min.js') }}"></script>
+<!-- Bootstrap -->
+<script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+<!-- Countdown -->
+<script src="{{ asset('assets/js/jquery.countdown.js') }}"></script>
+<!-- Isotope -->
+<script src="{{ asset('assets/js/jquery.isotope-3.0.6.min.js') }}"></script>
+<!-- Waypoints -->
+<script src="{{ asset('assets/js/waypoints.js') }}"></script>
+<!-- Owl Carousel -->
+<script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+<!-- Magnific Popup -->
+<script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+<!-- Mean Menu -->
+<script src="{{ asset('assets/js/jquery.meanmenu.min.js') }}"></script>
+<!-- Sticker JS -->
+<script src="{{ asset('assets/js/sticker.js') }}"></script>
+<!-- Main JS -->
+<script src="{{ asset('assets/js/main.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#cart-button').on('click', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '/cart',
+                method: 'GET',
+                success: function (response) {
+                    window.location.href = '/cart'; // Redirect to cart page if authenticated
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        $('#loginModal').modal('show'); // Show the login modal if not authenticated
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

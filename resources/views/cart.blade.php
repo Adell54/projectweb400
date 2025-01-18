@@ -1,91 +1,95 @@
 @extends('layouts.master')
 @section('content')
-	
 
+<!-- cart -->
+<div class="cart-section mt-150 mb-150">
+    <div class="container">
+       
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="cart-table-wrap">
+                    <table class="cart-table">
+                        <thead class="cart-table-head">
+                            <tr class="table-head-row">
+                                <th class="product-remove"></th>
+                                <th class="product-image">Product Image</th>
+                                <th class="product-name">Name</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-total">Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($cart && $cartItems->count() > 0)
+                                @foreach($cartItems as $item)
+                                <tr class="table-body-row">
+                                    <td class="product-remove">
+                                        <a href="{{ route('cart.remove', $item->id) }}"><i class="far fa-window-close"></i></a>
+                                    </td>
+                                    <td class="product-image">
+                                        @if($item->product)
+                                            <img src="data:image/jpeg;base64,{{ $item->product->image }}" alt="{{ $item->product->name }}">
+                                        @else
+                                            <img src="path/to/default-image.jpg" alt="Product image not available">
+                                        @endif
+                                    </td>
+                                    <td class="product-name">{{ $item->product->name ?? 'Unknown Product' }}</td>
+                                    <td class="product-price">${{ number_format($item->product->price ?? 0, 2) }}</td>
+                                    <td class="product-quantity">
+                                        <form action="{{ route('cart.update', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1">
+                                            <button type="submit" class="update-btn">Update</button>
+                                        </form>
+                                    </td>
+                                    <td class="product-total">
+                                        ${{ number_format(($item->quantity * ($item->product->price ?? 0)), 2) }}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                            <tr>
+                                <td colspan="6" class="text-center">Your cart is empty.</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
+            <div class="col-lg-4">
+                <div class="total-section">
+                    <table class="total-table">
+                        <thead class="total-table-head">
+                            <tr class="table-total-row">
+                                <th>Total</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="total-data">
+                                <td><strong>Subtotal: </strong></td>
+                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price), 2) }}</td>
+                            </tr>
+                            <tr class="total-data">
+                                <td><strong>Shipping: </strong></td>
+                                <td>$45.00</td>
+                            </tr>
+                            <tr class="total-data">
+                                <td><strong>Total: </strong></td>
+                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 45, 2) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="cart-buttons">
+                        <a href="" class="boxed-btn black">Check Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end cart -->
 
-	<!-- cart -->
-	<div class="cart-section mt-150 mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 col-md-12">
-					<div class="cart-table-wrap">
-						<table class="cart-table">
-							<thead class="cart-table-head">
-								<tr class="table-head-row">
-									<th class="product-remove"></th>
-									<th class="product-image">Product Image</th>
-									<th class="product-name">Name</th>
-									<th class="product-price">Price</th>
-									<th class="product-quantity">Quantity</th>
-									<th class="product-total">Total Price</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-2.jpg" alt=""></td>
-									<td class="product-name">Berry</td>
-									<td class="product-price">$70</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-3.jpg" alt=""></td>
-									<td class="product-name">Lemon</td>
-									<td class="product-price">$35</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="col-lg-4">
-					<div class="total-section">
-						<table class="total-table">
-							<thead class="total-table-head">
-								<tr class="table-total-row">
-									<th>Total</th>
-									<th>Price</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="total-data">
-									<td><strong>Subtotal: </strong></td>
-									<td>$500</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>$545</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="cart-buttons">
-							
-							<a href="/checkout" class="boxed-btn black">Check Out</a>
-						</div>
-					</div>
-
-					
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end cart -->
-
-	@endsection
+@endsection

@@ -41,16 +41,14 @@
     }
 
     .list-box {
-        background-color: white;
+        
         padding: 20px;
         border-radius: 10px;
         text-align: center;
         transition: box-shadow 0.3s ease;
     }
 
-    .list-box:hover {
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
+    
 
     .list-box .list-icon {
         font-size: 48px;

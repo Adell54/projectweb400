@@ -941,7 +941,7 @@ h2.widget-title:after {
 .footer-box.subscribe form button {
   width: 20%;
   border: none;
-  background-color: #012738;
+  
   color: #F28123;
   padding: 14px 0;
   border-top-right-radius: 3px;
@@ -1258,7 +1258,17 @@ a.cart-btn {
   transition: 0.3s;
 }
 
+button.cart-btn {
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
 a.cart-btn:hover {
+  background-color: #051922;
+  color: #F28123;
+}
+
+button.cart-btn:hover {
   background-color: #051922;
   color: #F28123;
 }
@@ -2487,6 +2497,17 @@ a.cart-btn {
   color: #fff;
   padding: 10px 20px;
 }
+button.cart-btn{
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  background-color: #F28123;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+button.cart-btn i{
+  margin-right: 5px;
+}
 
 a.cart-btn i {
   margin-right: 5px;
@@ -2552,6 +2573,9 @@ input[type="number"] {
   margin-bottom: 15px;
 }
 
+.single-product-form button.cart-btn {
+  margin-bottom: 15px;
+}
 .single-product-content h4 {
   font-size: 20px;
   font-weight: 600;
@@ -2676,6 +2700,17 @@ tr.total-data td strong {
   border-radius: 5px;
   font-size: 15px;
 }
+button.cart-btn {
+  font-family: 'Poppins', sans-serif;
+  display: block; /* Ensure full width alignment */
+  width: 100%; /* Button spans full width */
+  background-color: #F28123;
+  color: #fff;
+  padding: 12px 20px; /* Adjusted padding for consistency */
+  text-align: center;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
 a.cart-btn {
   font-family: 'Poppins', sans-serif;
   display: block; /* Ensure full width alignment */
@@ -2705,7 +2740,7 @@ a.cart-btn {
 }
 
 .card.single-accordion .card-header h5 button {
-  color: #051922;
+ 
   font-size: 15px;
   display: block;
   width: 100%;

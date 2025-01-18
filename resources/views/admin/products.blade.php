@@ -19,7 +19,7 @@
                         <span>Total Products: {{ $totalProducts }}</span>
                         <div class="input-group" style="width: 300px;">
                             <input type="text" class="form-control" placeholder="Search products by name..." id="searchProducts">
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" onclick="searchProducts()">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -67,12 +67,12 @@
                                     <a href="{{ route('admin.editproduct', $product->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteConfirm({{ $product->id }}, '{{ $product->name }}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                                     <form method="POST" action="" id="delete-form-{{ $product->id }}" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }},  )">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
                                     </form>
                                 </td>
                             </tr>
@@ -81,8 +81,8 @@
                     </table>
 
                     <!-- Pagination Links -->
-                    <div class="btn d-flex justify-content-center mt-4">
-                        {{ $products->links() }}
+                    <div>
+                        {{ $products->links('components.pagination') }}
                     </div>
                 </div>
             </div>
@@ -116,10 +116,32 @@
 </style>
 
 <script>
-    function confirmDelete(productId) {
-        if (confirm("Do you really want to delete this product?")) {
+    function showDeleteConfirm(productId, productName) {
+        const userConfirmed = confirm(`Please type the product name: ${productName} to confirm deletion.`);
+        if (userConfirmed && prompt(`Type "${productName}" to confirm deletion:`, '') === productName) {
             document.getElementById(`delete-form-${productId}`).submit();
+        } else {
+            alert('Product name does not match.');
         }
+    }
+
+    function searchProducts() {
+        const input = document.getElementById('searchProducts');
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById('productTable');
+        const rows = table.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(function(row) {
+            const td = row.getElementsByTagName('td')[2];
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
     }
 </script>
 @endsection

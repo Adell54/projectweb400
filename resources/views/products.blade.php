@@ -169,13 +169,16 @@
                         </div>
                     </div>
                 @endforeach
+
+          
             </div>
 
             <!-- Pagination -->
-
-            <div>
-                {{ $products->links() }}
-            </div>
+ 
+           <div>
+            {{ $products->links('components.pagination') }}
+        </div>
+<!-- Pagination -->
 
 
         </div>

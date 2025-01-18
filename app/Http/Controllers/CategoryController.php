@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Product;
 
 class CategoryController extends Controller
 {
@@ -28,6 +29,7 @@ class CategoryController extends Controller
     public function adminview()
     {
         $categories = Category::all();
+        $totalCategories = $categories->count();
         
         foreach ($categories as $category) {
             if ($category->image) {
@@ -35,7 +37,7 @@ class CategoryController extends Controller
             }
         }
        
-        return view('admin.categories', ['categories' => $categories]);
+        return view('admin.categories', ['categories' => $categories,'totalCategories'=>$totalCategories]);
     }
 
     /**
@@ -127,4 +129,11 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories')->with('success', 'Category deleted successfully.');
     }
+
+    public function checkProducts($id)
+{
+    $hasProducts = Product::where('category_id', $id)->exists();
+    return response()->json(['hasProducts' => $hasProducts]);
+}
+
 }

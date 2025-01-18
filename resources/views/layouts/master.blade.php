@@ -60,8 +60,9 @@
             <div class="header-icons">
                 <a class="shopping-cart" href="#" id="cart-button">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="badge" id="cart-item-count">3</span> <!-- Replace 3 with dynamic count -->
+                    <span class="badge" id="cart-item-count">{{ $cartItemCount() }}</span>
                 </a>
+                
 
                 @auth
                 <!-- Display Username if Logged In -->

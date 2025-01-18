@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
+
 <!-- single product -->
 <div class="single-product mt-150 mb-150">
     <div class="container">
@@ -17,13 +18,16 @@
                     <p class="single-product-pricing">$ {{ $product->price }}</p>
                     <p>{{ $product->description }}</p>
                     <div class="single-product-form">
-                        <form action="index.html">
+                        <form action="{{ route('cart.add') }}" method="POST">
+                            @csrf
                             <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity" placeholder="1">
-                        </form>
-                        <a href="cart.html" class="cart-btn">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                        </a>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                       
+                            <button type="submit" class="cart-btn">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                         </form>
                     </div>
                 </div>
             </div>
@@ -31,6 +35,9 @@
     </div>
 </div>
 <!-- end single product -->
+
+
+
 
 <!-- more products -->
 <div class="more-products mb-150">

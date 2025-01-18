@@ -101,6 +101,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="wrapper">
         <!-- Sidebar -->
@@ -126,7 +127,11 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-          
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             @yield('content')
         </div>
     </div>

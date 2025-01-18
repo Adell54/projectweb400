@@ -28,7 +28,7 @@ class ProductController extends Controller
 
 
     // Paginate results
-    $products = $query->paginate(5);
+    $products = $query->paginate(9);
     $categories = Category::select('id', 'name')->get();
     $categoryMap = $categories->pluck('name', 'id');
 
@@ -54,7 +54,7 @@ public function home(Request $request)
         $query->where('category_id', $request->category);
     }
     // Paginate results
-    $products = $query->paginate(9);
+    $products = $query->paginate(6);
     $categories = Category::select('id', 'name')->get();
     $categoryMap = $categories->pluck('name', 'id');
 
@@ -159,16 +159,49 @@ public function adminview()
      */
     public function edit(string $id)
     {
-        //
+        $product=Product::findOrFail($id);
+        $categories=Category::all();
+      
+
+        return view('admin.products.editproduct',['product'=>$product,'categories'=>$categories]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image',
+            'quantity' => 'required|integer',
+            'price' => 'required|numeric',
+            'category' => 'required|integer|exists:categories,id',
+            'description' => 'required|string',
+            'enabled' => 'required|boolean',
+        ]);
+    
+        $product = Product::findOrFail($id);
+        
+        $product->name = $request->name;
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $product->image = base64_encode(file_get_contents($image->getRealPath()));
+        } else {
+            $product->image = $product->image; // Keep the existing image
+        }
+    
+        $product->quantity = $request->quantity;
+        $product->price = $request->price;
+        $product->category_id = $request->category;
+        $product->description = $request->description;
+        $product->enabled = $request->enabled;
+        $product->save();
+    
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -22,7 +22,7 @@
 
                         <div class="form-group">
                             <label for="productImage">Product Image</label>
-                            <input type="file" id="productImage" name="image" class="form-control"  onchange="previewImages()">
+                            <input type="file" id="productImage" name="image" class="form-control"  onchange="previewImage()">
                         </div>
 
                         <div class="form-group">

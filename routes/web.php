@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -35,9 +36,13 @@ Route::get('/about', function () {
 // Cart/Checkout Routes:
 Route::middleware(['auth'])->group(function () {
 
-Route::get('/cart', function () {
-    return view('cart');
-});
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+
+
+
 Route::get('/checkout', function () {
     return view('checkout');
 });
@@ -60,7 +65,10 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/addproduct', [ProductController::class,'create'])->name('admin.addproduct');
     Route::post('/addproduct', [ProductController::class, 'store'])->name('admin.addproduct.store'); 
-    Route::view('/editproduct', 'admin.products.editproduct')->name('admin.editproduct');
+    Route::get('/editproduct/{id}', [ProductController::class,'edit'])->name('admin.editproduct');
+    Route::put('/editproduct/{id}', [ProductController::class,'update'])->name('admin.updateproduct');
+
+
     Route::delete('/products/delete/{id}', [CategoryController::class, 'destroy'])->name('products.destroy');
     
     // Routes for Categories
@@ -68,6 +76,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/categories/addcategory', [CategoryController::class,'create'])->name('addcategory');
     Route::get('/categories/editcategory/{id}', [CategoryController::class, 'edit'])->name('admin.categories.editcategory');
     Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::get('/categories/checkProducts/{id}', [CategoryController::class, 'checkProducts'])->name('admin.categories.checkProducts');
+
 });
 
 

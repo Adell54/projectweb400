@@ -7,7 +7,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>We sale fresh fruits</p>
+						<p>All the products you want in one place</p>
 						<h1>About Us</h1>
 					</div>
 				</div>
@@ -17,12 +17,12 @@
 	<!-- end breadcrumb section -->
 
 	<!-- featured section -->
-	<div class="feature-bg">
+	<div class="mt-150 mb-150">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-7">
+				
 					<div class="featured-text">
-						<h2 class="pb-3">Why <span class="orange-text">Fruitkha</span></h2>
+						<h2 class="pb-3">Why <span class="orange-text">Easy Shop</span></h2>
 						<div class="row">
 							<div class="col-lg-6 col-md-6 mb-4 mb-md-5">
 								<div class="list-box d-flex">
@@ -31,7 +31,7 @@
 									</div>
 									<div class="content">
 										<h3>Home Delivery</h3>
-										<p>sit voluptatem accusantium dolore mque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
+										<p>We ensure fast and reliable home delivery for all your orders.</p>
 									</div>
 								</div>
 							</div>
@@ -42,7 +42,7 @@
 									</div>
 									<div class="content">
 										<h3>Best Price</h3>
-										<p>sit voluptatem accusantium dolore mque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
+										<p>We offer competitive pricing on a wide range of products.</p>
 									</div>
 								</div>
 							</div>
@@ -53,7 +53,7 @@
 									</div>
 									<div class="content">
 										<h3>Custom Box</h3>
-										<p>sit voluptatem accusantium dolore mque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
+										<p>Enjoy the option of custom packaging for your special orders.</p>
 									</div>
 								</div>
 							</div>
@@ -64,21 +64,17 @@
 									</div>
 									<div class="content">
 										<h3>Quick Refund</h3>
-										<p>sit voluptatem accusantium dolore mque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
+										<p>Our quick refund process ensures customer satisfaction.</p>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				
+             
 			</div>
 		</div>
 	</div>
 	<!-- end featured section -->
-
 	
-
-	
-
-	
-	@endsection
+@endsection

@@ -10,91 +10,100 @@
                     <h4 class="mb-0">Edit Product</h4>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('admin.updateproduct', $product->id) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" id="productName" class="form-control" value="Smartphone" required>
+                            <input type="text" id="productName" name="name" class="form-control" value="{{ $product->name }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="productImages">Product Images</label>
-                            <input type="file" id="productImages" class="form-control" multiple onchange="previewImages()">
+                            <label for="productImage">Product Image</label>
+                            <input type="file" id="productImage" name="image" class="form-control" onchange="previewImage()">
+                            <small id="fileHelp" class="form-text text-muted">Keeps current image if no file is selected.</small>
                         </div>
-
+                        
                         <div class="form-group">
-                            <div id="imagePreview" class="d-flex flex-wrap"></div>
+                            <div id="imagePreview" class="d-flex flex-wrap">
+                                @if($product->image)
+                                    <img src="data:image/jpeg;base64,{{ $product->image }}" class="img-thumbnail" style="width: 150px;">
+                                @endif
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="productQuantity">Quantity</label>
-                            <input type="number" id="productQuantity" class="form-control" value="50" min="1" required>
+                            <input type="number" id="productQuantity" name="quantity" class="form-control" value="{{ $product->quantity }}" min="1" required>
                         </div>
 
                         <div class="form-group">
                             <label for="productPrice">Price</label>
-                            <input type="number" id="productPrice" class="form-control" value="499.99" step="0.01" min="0" required>
+                            <input type="number" id="productPrice" name="price" class="form-control" value="{{ $product->price }}" step="0.01" min="0" required>
                         </div>
 
                         <div class="form-group">
                             <label for="productCategory">Category</label>
-                            <select id="productCategory" class="form-control">
-                                <option value="1" selected>Electronics</option>
-                                <option value="2">Clothing</option>
-                                <option value="3">Books</option>
+                            <select id="productCategory" name="category" class="form-control">
+                                @foreach ($categories as $item)
+                                    <option value="{{ $item->id }}" {{ $product->category_id == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="productDescription">Description</label>
-                            <textarea id="productDescription" class="form-control" rows="4">High-quality smartphone with excellent features.</textarea>
+                            <textarea id="productDescription" name="description" class="form-control" rows="4" required>{{ $product->description }}</textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="productStatus">Status</label>
-                            <select id="productStatus" class="form-control">
-                                <option value="1" selected>Enabled</option>
-                                <option value="0">Disabled</option>
+                            <select id="productStatus" name="enabled" class="form-control">
+                                <option value="1" {{ $product->enabled == 1 ? 'selected' : '' }}>Enabled</option>
+                                <option value="0" {{ $product->enabled == 0 ? 'selected' : '' }}>Disabled</option>
                             </select>
                         </div>
-
+                        
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-warning btn-lg">Update Product</button>
-                            <a href="{{ url('/admin/products') }}" class="btn btn-secondary btn-lg">Cancel</a>
+                            <a href="{{ route('admin.products') }}" class="btn btn-secondary btn-lg">Cancel</a>
                         </div>
                     </form>
+
+                    <script>
+                        function previewImage() {
+                            const preview = document.getElementById('imagePreview');
+                            const file = document.getElementById('productImage').files[0];
+                            const fileHelp = document.getElementById('fileHelp');
+                            
+                            preview.innerHTML = '';
+
+                            if (file) {
+                                const reader = new FileReader();
+                                
+                                reader.onload = (e) => {
+                                    const imgElement = document.createElement('img');
+                                    imgElement.src = e.target.result;
+                                    imgElement.className = 'img-thumbnail';
+                                    imgElement.style.width = '150px';
+                                    preview.appendChild(imgElement);
+                                    fileHelp.innerHTML = 'New image selected.';
+                                };
+                                
+                                reader.readAsDataURL(file);
+                            } else {
+                                fileHelp.innerHTML = 'Keep current image if no file is selected.';
+                            }
+                        }
+                    </script>
+                    
+                    <!-- Bootstrap and jQuery dependencies -->
+                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    function previewImages() {
-        const preview = document.getElementById('imagePreview');
-        const files = document.getElementById('productImages').files;
-        
-        preview.innerHTML = '';
-        
-        if (files) {
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                
-                reader.onload = (e) => {
-                    const imgElement = document.createElement('img');
-                    imgElement.src = e.target.result;
-                    imgElement.className = 'img-thumbnail m-2';
-                    imgElement.style.width = '100px';
-                    preview.appendChild(imgElement);
-                };
-                
-                reader.readAsDataURL(file);
-            });
-        }
-    }
-</script>
-
-<!-- Bootstrap and jQuery dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 @endsection

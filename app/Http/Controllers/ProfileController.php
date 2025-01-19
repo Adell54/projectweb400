@@ -31,16 +31,37 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = $request->user();
+    
+        if ($request->type === 'email') {
+            // Validate and update email
+            $request->validate([
+                'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            ]);
+    
+            $user->email = $request->email;
+            $user->email_verified_at = null; // Mark email as unverified if changed
+            $user->save();
+    
+            return Redirect::route('profile.edit')->with('status', 'Email updated successfully!');
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    
+        if ($request->type === 'password') {
+            // Validate and update password
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password' => ['required', 'confirmed', 'min:8'],
+            ]);
+    
+            $user->password = bcrypt($request->password);
+            $user->save();
+    
+            return Redirect::route('profile.edit')->with('status', 'Password updated successfully!');
+        }
+    
+        return Redirect::route('profile.edit')->with('status', 'No changes made.');
     }
+    
 
     /**
      * Delete the user's account.

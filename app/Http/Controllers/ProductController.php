@@ -69,7 +69,7 @@ public function home(Request $request)
 
 public function adminview()
 {
-    $products = Product::paginate(10);
+    $products = Product::paginate(9);
     $categories = Category::select('id', 'name')->get();
     $categoryMap = $categories->pluck('name', 'id');
      

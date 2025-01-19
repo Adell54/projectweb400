@@ -102,7 +102,7 @@
     }
 </style>
 
-
+@include('components.login.register')
 <!-- Features List Section -->
 <div class="list-section pt-60 pb-25">
     <div class="container">
@@ -161,7 +161,6 @@
 
 <!-- Product Section -->
 <div id="products" class="product-section mt-80 mb-80">
-	
     <div class="container">
         <h3 class="text-center mb-10">Explore Our Latest Products</h3>
         <div class="row product-lists">
@@ -175,12 +174,31 @@
                         </div>
                         <h3>{{ $product->name }}</h3>
                         <p class="product-price"><span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}</p>
-                        <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                        <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            @if (Auth::check())
+                                <button type="submit" class="cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            @else
+                                <button type="button" class="cart-btn" onclick="showLoginModal()">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            @endif
+                        </form>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
 </div>
+
+<script>
+    function showLoginModal() {
+        $('#loginModal').modal('show');
+    }
+</script>
 
 @endsection

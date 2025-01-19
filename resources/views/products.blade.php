@@ -117,6 +117,8 @@
         }
     </style>
 
+
+@include('components.login.register')
     <!-- products -->
     <div class="product-section mt-150 mb-150">
         <div class="container">
@@ -157,21 +159,33 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="single-product-item">
                             <div class="product-image">
-                                <a href="{{route('products.show',$product->id)}}">
-                                    <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}"
-                                        class="img-fluid">
+                                <a href="{{ route('products.show', $product->id) }}">
+                                    <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid">
                                 </a>
                             </div>
                             <h3>{{ $product->name }}</h3>
-                            <p class="product-price"><span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span>
-                                ${{ $product->price }}</p>
-                            <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                            <p class="product-price">
+                                <span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}
+                            </p>
+                            <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                @if (Auth::check())
+                                    <button type="submit" class="cart-btn">
+                                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                @else
+                                    <button type="button" class="cart-btn" onclick="showLoginModal()">
+                                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 @endforeach
-
-          
             </div>
+            
 
             <!-- Pagination -->
  
@@ -182,6 +196,13 @@
 
 
         </div>
+
+        <script>
+            function showLoginModal() {
+                $('#loginModal').modal('show');
+            }
+        </script>
+        
 
             <!-- end products -->
         @endsection

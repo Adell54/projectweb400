@@ -6,7 +6,7 @@ use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Middleware\AdminMiddleware;
-
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
 
 
@@ -14,11 +14,6 @@ use App\Http\Controllers\CategoryController;
 
 
 // User Routes :
-
-
-
-
-
 Route::get('/home', [ProductController::class, 'home'])->name('home.index');
 Route::get('/', [ProductController::class, 'home'])->name('home.index');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -35,17 +30,19 @@ Route::get('/about', function () {
 
 // Cart/Checkout Routes:
 Route::middleware(['auth'])->group(function () {
-
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
 
+    Route::get('/checkout', [OrderController::class, 'showCheckout'])->name('checkout');
 
-Route::get('/checkout', function () {
-    return view('checkout');
-});
+    Route::post('/checkout/place-order', [OrderController::class, 'placeOrder'])->name('placeOrder');
+
+
 
 });
 
@@ -61,7 +58,9 @@ Route::get('/checkout', function () {
 
 Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-    Route::view('/orders', 'admin.orders')->name('admin.orders');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+   
 
     // Routes for Products
     Route::get('/products', [ProductController::class, 'adminview'])->name('admin.products');

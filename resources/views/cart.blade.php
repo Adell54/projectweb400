@@ -4,7 +4,6 @@
 <!-- cart -->
 <div class="cart-section mt-150 mb-150">
     <div class="container">
-       
         <div class="row">
             <div class="col-lg-8 col-md-12">
                 <div class="cart-table-wrap">
@@ -24,7 +23,13 @@
                                 @foreach($cartItems as $item)
                                 <tr class="table-body-row">
                                     <td class="product-remove">
-                                        <a href="{{ route('cart.remove', $item->id) }}"><i class="far fa-window-close"></i></a>
+                                        <form action="{{ route('cart.remove', $item->id ) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" style="background:none; border:none; color:#337ab7; cursor:pointer;">
+                                                <i class="far fa-window-close"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="product-image">
                                         @if($item->product)
@@ -35,14 +40,7 @@
                                     </td>
                                     <td class="product-name">{{ $item->product->name ?? 'Unknown Product' }}</td>
                                     <td class="product-price">${{ number_format($item->product->price ?? 0, 2) }}</td>
-                                    <td class="product-quantity">
-                                        <form action="{{ route('cart.update', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1">
-                                            <button type="submit" class="update-btn">Update</button>
-                                        </form>
-                                    </td>
+                                    <td class="product-quantity">{{ $item->quantity }}</td>
                                     <td class="product-total">
                                         ${{ number_format(($item->quantity * ($item->product->price ?? 0)), 2) }}
                                     </td>
@@ -57,7 +55,6 @@
                     </table>
                 </div>
             </div>
-
             <div class="col-lg-4">
                 <div class="total-section">
                     <table class="total-table">
@@ -74,7 +71,7 @@
                             </tr>
                             <tr class="total-data">
                                 <td><strong>Shipping: </strong></td>
-                                <td>$45.00</td>
+                                <td>$5.00</td>
                             </tr>
                             <tr class="total-data">
                                 <td><strong>Total: </strong></td>

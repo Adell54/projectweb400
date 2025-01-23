@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart_items;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Cart;
 use App\Models\Order_items;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,29 +14,37 @@ class OrderController extends Controller
     /**
      * Place an order for the authenticated user.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Order::with('user');
+        $orders =Order::all();
+        return view('admin.orders',['orders'=>$orders]);
+    }
+
+     /**
+     * View details of a specific order.
+     */
+    public function showOrder($orderId)
+    {
+        // Fetch the order by ID
+        $order = Order::findOrFail($orderId);
     
-        if ($request->status && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
+        // Fetch the associated order items
+        $orderItems = Order_items::where('order_id', $orderId)->get();
     
-        if ($request->search) {
-            $query->whereHas('user', function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->search}%");
-            })->orWhere('id', 'like', "%{$request->search}%");
-        }
+        // Fetch the associated products based on the retrieved order items
+        $productIds = $orderItems->pluck('product_id'); // Assuming there's a 'product_id' field in `Order_items`
+        $products = Product::whereIn('id', $productIds)->get(); // Fetch products where their IDs are in the retrieved order items
     
-        $orders = $query->paginate(10);
-    
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.details', [
+            'order' => $order,
+            'orderItems' => $orderItems,
+            'products' => $products 
+        ]);
     }
     
-    public function show(Order $order)
-    {
-        return view('admin.orders', compact('order'));
-    }
+
+    
+ 
     
 
 
@@ -64,7 +72,7 @@ class OrderController extends Controller
     });
 
     // Assuming you have a fixed shipping cost for simplicity
-    $shippingCost = 30; // Or calculate based on the user's location, cart weight, etc.
+    $shippingCost = 5; // Or calculate based on the user's location, cart weight, etc.
     
     // Total price calculation
     $totalPrice = $subtotal + $shippingCost;
@@ -74,49 +82,61 @@ class OrderController extends Controller
 }
 
 
-    public function placeOrder(Request $request)
-    {
-        $user = Auth::user();
-        $cartItems = Cart_items::where('cart_id', $user->cart->id)->get();
+public function placeOrder(Request $request)
+{
+    $user = Auth::user();
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->back()->with('error', 'Your cart is empty.');
-        }
-
-        // Validate phone and location input
-        $request->validate([
-            'phone' => 'required|string|max:15',
-            'location' => 'required|string|max:255',
-        ]);
-
-        // Calculate total price
-        $totalPrice = $cartItems->sum(function ($item) {
-            return $item->quantity * $item->product->price;
-        });
-
-        // Create the order
-        $order = Order::create([
-            'user_id' => $user->id,
-            'phone' => $request->input('phone'),
-            'location' => $request->input('location'),
-            'total_price' => $totalPrice,
-        ]);
-
-        // Add items to the order
-        foreach ($cartItems as $cartItem) {
-            Order_items::create([
-                'order_id' => $order->id,
-                'product_id' => $cartItem->product_id,
-                'quantity' => $cartItem->quantity,
-                'price' => $cartItem->product->price,
-            ]);
-        }
-
-        // Clear the cart
-        $cartItems->each->delete();
-
-        return redirect()->route('profile.orders')->with('success', 'Order placed successfully!');
+    // Fetch the cart
+    $cart = Cart::where('user_id', $user->id)->first();
+    if (!$cart) {
+        return redirect()->route('cart.view')->with('error', 'No cart found.');
     }
+
+    // Fetch cart items
+    $cartItems = Cart_items::where('cart_id', $cart->id)->get();
+    if ($cartItems->isEmpty()) {
+        return redirect()->route('cart.view')->with('error', 'Your cart is empty.');
+    }
+
+    // Validate input
+    $request->validate([
+        'phone' => 'required|string|max:15',
+        'location' => 'required|string|max:255',
+    ]);
+
+    // Calculate total price
+    $totalPrice = $cartItems->sum(function ($item) {
+        return $item->quantity * $item->product->price;
+    });
+
+    // Create a new order instance
+    $order = new Order();
+    $order->user_id = $user->id;
+    $order->phone = $request->phone;
+    $order->location = $request->location;
+    $order->total_price = $totalPrice;
+    $order->status = 'pending'; // Default status
+    $order->save();
+
+    // Add items to the order
+    foreach ($cartItems as $cartItem) {
+        $orderItem = new Order_items();
+        $orderItem->order_id = $order->id;
+        $orderItem->product_id = $cartItem->product_id;
+        $orderItem->quantity = $cartItem->quantity;
+        $orderItem->price = $cartItem->product->price;
+        $orderItem->save();
+    }
+
+    // Clear the cart
+    foreach ($cartItems as $cartItem) {
+        $cartItem->delete();
+    }
+
+    return redirect()->route('cart.view')->with('success', 'Order placed successfully!');
+}
+
+
 
     /**
      * Display the user's orders.
@@ -132,14 +152,7 @@ class OrderController extends Controller
     
     
 
-    /**
-     * Display all orders for admin.
-     */
-    public function adminOrders()
-    {
-        $orders = Order::with('items.product', 'user')->get();
-        return view('admin.orders.index', compact('orders'));
-    }
+   
 
     /**
      * Update the status of an order.
@@ -155,21 +168,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order status updated successfully!');
     }
 
-    /**
-     * View details of a specific order.
-     */
-    public function showOrder($orderId)
-    {
-        // Fetch the order by ID
-        $order = Order::with('items.product')->findOrFail($orderId);
-    
-        // Check if the authenticated user is the owner of the order
-        if (Auth::user()->id !== $order->user_id) {
-            return abort(403, 'Unauthorized action.'); // You can change this to any error response you prefer
-        }
-    
-        return view('orders.show', compact('order'));
-    }
+   
     
     
 }

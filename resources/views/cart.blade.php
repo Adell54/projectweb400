@@ -3,9 +3,17 @@
 
 <!-- cart -->
 <div class="cart-section mt-150 mb-150">
+  
     <div class="container">
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
         <div class="row">
+            
             <div class="col-lg-8 col-md-12">
+            
                 <div class="cart-table-wrap">
                     <table class="cart-table">
                         <thead class="cart-table-head">
@@ -75,12 +83,12 @@
                             </tr>
                             <tr class="total-data">
                                 <td><strong>Total: </strong></td>
-                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 45, 2) }}</td>
+                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 5, 2) }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="cart-buttons">
-                        <a href="" class="boxed-btn black">Check Out</a>
+                        <a href="{{route('checkout')}}" class="boxed-btn black">Check Out</a>
                     </div>
                 </div>
             </div>

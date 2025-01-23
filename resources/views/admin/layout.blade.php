@@ -110,16 +110,16 @@
                 Admin Panel
             </div>
             <div class="list-group list-group-flush">
-                <a href="/admin/dashboard" class="list-group-item list-group-item-action {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+                <a href="/admin/dashboard" class="list-group-item list-group-item-action">
                     <i class="fas fa-chart-line"></i> <span>Dashboard</span>
                 </a>
-                <a href="/admin/products" class="list-group-item list-group-item-action {{ request()->is('admin/products') ? 'active' : '' }}">
+                <a href="/admin/products" class="list-group-item list-group-item-action ">
                     <i class="fas fa-box"></i> <span>Products</span>
                 </a>
-                <a href="/admin/categories" class="list-group-item list-group-item-action {{ request()->is('admin/categories') ? 'active' : '' }}">
+                <a href="/admin/categories" class="list-group-item list-group-item-action ">
                     <i class="fas fa-tags"></i> <span>Categories</span>
                 </a>
-                <a href="/admin/orders" class="list-group-item list-group-item-action {{ request()->is('admin/orders') ? 'active' : '' }}">
+                <a href="{{route('admin.orders')}}" class="list-group-item list-group-item-action ">
                     <i class="fas fa-shopping-cart"></i> <span>Orders</span>
                 </a>
             </div>

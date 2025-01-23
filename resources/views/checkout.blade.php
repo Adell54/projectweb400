@@ -24,35 +24,21 @@
                                         <h4 class="text-center">Please fill in your address and contact information:</h4>
                                         <form action="{{ route('placeOrder') }}" method="POST">
                                             @csrf
-                                            
+                                        
                                             <!-- Address and Phone Inputs -->
-                                            <p><input type="text" name="address" placeholder="Address" value="{{ old('address') }}" required></p>
+                                            <p><input type="text" name="location" placeholder="Address" value="{{ old('location') }}" required></p>
                                             <p><input type="tel" name="phone" placeholder="Phone" value="{{ old('phone') }}" required></p>
                                             
                                             <button type="submit" class="btn btn-primary">Place Order</button>
                                         </form>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Card Details Accordion (Placeholder) -->
-                        <div class="card single-accordion">
-                            <div class="card-header" id="headingThree">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        Card Details
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="card-details">
-                                        <p>Your card details go here. (Use a payment gateway for real functionality)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                   
+                    
                     </div>
                 </div>
             </div>

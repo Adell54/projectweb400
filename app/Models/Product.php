@@ -9,6 +9,21 @@ class Product extends Model
  
     protected $table = 'products';
  
-    protected $fillable = ['name', 'image','quantity','price','category', 'description', 'enabled','category_id'];
+    protected $fillable = ['name', 'image','quantity','price', 'description', 'enabled','category_id'];
+
+    public function category(){
+
+        return $this->hasOne(Category::class);
+    }
+
+    public function cartitems(){
+
+        return $this->hasOne(Cart_items::class);
+    }
+
+    public function orderitems(){
+
+        return $this->hasOne(Order_items::class);
+    }
     
 }

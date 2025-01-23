@@ -58,8 +58,11 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+    Route::get('/orders/details/{id}', [OrderController::class, 'showOrder'])->name('admin.orders.details');
+
+    
+   
    
 
     // Routes for Products

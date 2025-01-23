@@ -9,6 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $table = 'orders';
     protected $fillable = [
         'user_id',
         'phone',
@@ -19,7 +20,7 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
     }
 
     public function items()

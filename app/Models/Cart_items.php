@@ -13,7 +13,12 @@ class Cart_items extends Model
     // In App\Models\CartItem.php
 public function product()
 {
-    return $this->belongsTo(Product::class);
+    return $this->hasOne(Product::class);
+}
+
+public function cart(){
+
+    return $this->hasOne(Cart::class);
 }
 
 }

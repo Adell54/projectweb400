@@ -10,4 +10,9 @@ class Category extends Model
   protected $table = 'categories';
  
    protected $fillable = ['name', 'image', 'description', 'enabled'];
+
+   public function product(){
+
+    return $this->hasOne(Product::class);
+}
 }

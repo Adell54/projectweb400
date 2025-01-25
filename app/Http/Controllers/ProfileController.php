@@ -20,11 +20,7 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
-    public function purchaseHistory()
-    {
-        // Return the dummy data view
-        return view('profile.history');
-    }
+    
     
     /**
      * Update the user's profile information.

@@ -1,208 +1,202 @@
 @extends('layouts.master')
 @section('content')
-    <style>
-        /* Category Filters */
-        .product-filters ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+<style>
+    /* Filters Section */
+    .filters-section {
+        margin-bottom: 30px;
+        text-align: center;
+    }
 
-        .product-filters ul li {
-            margin: 0;
-        }
+    .filters-section .product-filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
 
-        .product-filters ul li a {
-            display: inline-block;
-            padding: 10px 20px;
-            border: 2px solid #F28123;
-            ;
-            border-radius: 25px;
-            background-color: transparent;
-            color: black;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
+    .filters-section .product-filters a {
+        padding: 10px 15px;
+        border: 2px solid #F28123;
+        border-radius: 25px;
+        background-color: transparent;
+        color: black;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
 
-        .product-filters ul li a:hover {
-            background-color: #F28123;
-            ;
-            color: white;
-        }
+    .filters-section .product-filters a:hover,
+    .filters-section .product-filters a.active {
+        background-color: #F28123;
+        color: white;
+    }
 
-        .product-filters ul li.active a {
-            background-color: #F28123;
-            ;
-            color: white;
-        }
+    /* Price Filter */
+    .price-filter-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
 
-        /* Product Cards */
-        .single-product-item {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #fff;
-            transition: box-shadow 0.3s ease;
-            height: 100%;
-            /* Ensures cards are of equal height */
-        }
+    .price-filter input {
+        width: 100px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 
-        .single-product-item:hover {
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    .price-filter button {
+        padding: 5px 15px;
+        background-color: #F28123;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
 
-        .product-image img {
-            width: 100%;
-            max-width: 200px;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
+    .price-filter button:hover {
+        background-color: darkorange;
+    }
 
-        .cart-btn {
-            margin-top: 15px;
-            background-color: orange;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
+    /* Product Cards */
+    .single-product-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #fff;
+        transition: box-shadow 0.3s ease;
+        height: 100%;
+    }
 
-        .cart-btn:hover {
-            background-color: #F28123;
-            ;
-        }
+    .single-product-item:hover {
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        /* Search Bar */
-        .search-bar-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
+    .product-image img {
+        width: 100%;
+        max-width: 200px;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
-        .search-bar-wrapper .input-group {
-            width: 50%;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    .single-product-item h3 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 10px 0;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
 
-        .search-bar-wrapper .form-control {
-            border-top-left-radius: 25px;
-            border-bottom-left-radius: 25px;
-            border: 2px solid #ddd;
-        }
+    .cart-btn {
+        margin-top: 15px;
+        background-color: #F28123;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
 
-        .search-bar-wrapper .btn {
-            border-top-right-radius: 25px;
-            border-bottom-right-radius: 25px;
-            background-color: #F28123;
-            ;
-            border: 2px solid #F28123;
-            ;
-            color: white;
-        }
+    .cart-btn:hover {
+        background-color: darkorange;
+    }
+</style>
 
+<div class="product-section mt-150 mb-150">
+    <div class="container">
 
-        .search-bar-wrapper .btn:hover {
-            background-color: darkorange;
-            border-color: darkorange;
-        }
-    </style>
+        <!-- Search Bar -->
+        <div class="search-bar-wrapper mb-4">
+            <form method="GET" action="{{ route('products.index') }}" class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search for products..."
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
 
-
-@include('components.login.register')
-    <!-- products -->
-    <div class="product-section mt-150 mb-150">
-        <div class="container">
-
-            <!-- Search Bar -->
-            <div class="search-bar-wrapper">
-                <form method="GET" action="{{ route('products.index') }}" class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Search for products..."
-                        value="{{ request('search') }}">
-                    <button type="submit" class="btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Product Filters -->
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="product-filters">
-                        <ul>
-                            <li class="{{ request('category') ? '' : 'active' }}">
-                                <a href="{{ route('products.index') }}">All</a>
-                            </li>
-                            @foreach ($categories as $category)
-                                <li class="{{ request('category') == $category->id ? 'active' : '' }}">
-                                    <a
-                                        href="{{ route('products.index', ['category' => $category->id]) }}">{{ $category->name }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product List -->
-            <div class="row product-lists">
-                @foreach ($products as $product)
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="single-product-item">
-                            <div class="product-image">
-                                <a href="{{ route('products.show', $product->id) }}">
-                                    <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid">
-                                </a>
-                            </div>
-                            <h3>{{ $product->name }}</h3>
-                            <p class="product-price">
-                                <span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}
-                            </p>
-                            <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="quantity" value="1">
-                                @if (Auth::check())
-                                    <button type="submit" class="cart-btn">
-                                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                                    </button>
-                                @else
-                                    <button type="button" class="cart-btn" onclick="showLoginModal()">
-                                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                                    </button>
-                                @endif
-                            </form>
-                        </div>
-                    </div>
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <!-- Category Filters -->
+            <div class="product-filters">
+                <a href="{{ route('products.index') }}" class="{{ request('category') ? '' : 'active' }}">All</a>
+                @foreach ($categories as $category)
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}"
+                        class="{{ request('category') == $category->id ? 'active' : '' }}">{{ $category->name }}</a>
                 @endforeach
             </div>
-            
 
-            <!-- Pagination -->
- 
-           <div>
+            <!-- Price Filter -->
+            <div class="price-filter-wrapper">
+                <form method="GET" action="{{ route('products.index') }}" class="price-filter">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                    <input type="text" name="search" value="{{ request('search') }}" hidden>
+                    <input type="number" name="min_price" placeholder="Min Price" value="{{ request('min_price') }}">
+                    <input type="number" name="max_price" placeholder="Max Price" value="{{ request('max_price') }}">
+                    <button type="submit">Filter</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="row product-lists">
+            @foreach ($products as $product)
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="single-product-item">
+                        <div class="product-image">
+                            <a href="{{ route('products.show', $product->id) }}">
+                                <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid">
+                            </a>
+                        </div>
+                        <h3>{{ $product->name }}</h3>
+                        <p class="product-price">
+                            <span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}
+                        </p>
+                        <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            @if (Auth::check())
+                                <button type="submit" class="cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            @else
+                                <button type="button" class="cart-btn" onclick="showLoginModal()">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            @endif
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination -->
+        <div>
             {{ $products->links('components.pagination') }}
         </div>
-<!-- Pagination -->
+    </div>
+</div>
 
-
-        </div>
-
-        <script>
-            function showLoginModal() {
-                $('#loginModal').modal('show');
-            }
-        </script>
-        
-
-            <!-- end products -->
-        @endsection
+<script>
+    function showLoginModal() {
+        $('#loginModal').modal('show');
+    }
+</script>
+@endsection

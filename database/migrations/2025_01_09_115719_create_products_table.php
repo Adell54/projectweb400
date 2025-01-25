@@ -17,6 +17,7 @@ return new class extends Migration
             $table->binary('image');
             $table->integer('quantity');
             $table->double('price');
+            $table->double('cost');
             $table->foreignId('category_id')->constrained('categories');
             $table->longText('description');
             $table->boolean('enabled')->default(false);

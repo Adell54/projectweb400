@@ -13,32 +13,43 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $query = Product::query();
-
-    // Handle search
-    if ($request->has('search')) {
-        $query->where('name', 'like', '%' . $request->search . '%');
+    {
+        $query = Product::query();
+    
+        // Only include enabled products
+        $query->where('enabled', true);
+    
+        // Handle search
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+    
+        // Handle category filter
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category_id', $request->category);
+        }
+    
+        // Handle price filter
+        if ($request->has('min_price') || $request->has('max_price')) {
+            $query->whereBetween('price', [
+                $request->input('min_price', 0), 
+                $request->input('max_price', PHP_INT_MAX)
+            ]);
+        }
+    
+        // Paginate results
+        $products = $query->paginate(9);
+    
+        $categories = Category::select('id', 'name')->get();
+        $categoryMap = $categories->pluck('name', 'id');
+    
+        return view('products', [
+            'products' => $products,
+            'categoryMap' => $categoryMap,
+            'categories' => $categories,
+        ]);
     }
-
-    // Handle category filter
-    if ($request->has('category')) {
-        $query->where('category_id', $request->category);
-    }
-
-
-    // Paginate results
-    $products = $query->paginate(9);
-    $categories = Category::select('id', 'name')->get();
-    $categoryMap = $categories->pluck('name', 'id');
-
-    return view('products', [
-        'products' => $products,
-        'categoryMap' => $categoryMap,
-        'categories' => $categories,
-    ]);
-}
-
+    
 
 public function home(Request $request)
 {
@@ -113,6 +124,7 @@ public function adminview()
             'image' => 'required|image',
             'quantity' => 'required|integer',
             'price' => 'required|numeric',
+            'cost' => 'required|numeric',
             'category' => 'required|integer|exists:categories,id',
             'description' => 'required|string',
             'enabled' => 'required|boolean',
@@ -129,6 +141,7 @@ public function adminview()
     
         $product->quantity = $request->quantity;
         $product->price = $request->price;
+        $product->cost = $request->cost;
         $product->category_id = $request->category;
         $product->description = $request->description;
         $product->enabled = $request->enabled;
@@ -176,6 +189,7 @@ public function adminview()
             'image' => 'nullable|image',
             'quantity' => 'required|integer',
             'price' => 'required|numeric',
+            'cost' => 'required|numeric',
             'category' => 'required|integer|exists:categories,id',
             'description' => 'required|string',
             'enabled' => 'required|boolean',
@@ -189,11 +203,12 @@ public function adminview()
             $image = $request->file('image');
             $product->image = base64_encode(file_get_contents($image->getRealPath()));
         } else {
-            $product->image = $product->image; // Keep the existing image
+            $product-> image = $product->image; // Keep the existing image
         }
     
         $product->quantity = $request->quantity;
         $product->price = $request->price;
+        $product->cost = $request->cost;
         $product->category_id = $request->category;
         $product->description = $request->description;
         $product->enabled = $request->enabled;

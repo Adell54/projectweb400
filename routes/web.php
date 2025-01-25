@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -57,9 +56,15 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
+
+
+    // Routes for Dashbaord
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+
+    // Routes for Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::get('/orders/details/{id}', [OrderController::class, 'showOrder'])->name('admin.orders.details');
+    Route::patch('admin/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 
     
    
@@ -91,9 +96,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
 // Breeze Routes:
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile/history', [ProfileController::class, 'purchasehistory'])->name('profile.history');
-});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

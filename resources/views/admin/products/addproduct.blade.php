@@ -40,6 +40,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="productPrice">Cost</label>
+                            <input type="number" id="productCost" name="cost" class="form-control" placeholder="Enter cost" step="0.01" min="0" required>
+                        </div>
+
+                        <div class="form-group">
                             <label for="productCategory">Category</label>
                             <select id="productCategory" name="category" class="form-control">                             
                                 <option value="">Select a category</option>

@@ -137,7 +137,9 @@
     </div>
 
     <!-- Bootstrap Bundle -->
+     <script src="{{ asset('assets/js/jquery-1.11.3.min.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+   
     <script>
         function toggleMenu() {
             document.getElementById('wrapper').classList.toggle('collapsed');

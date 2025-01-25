@@ -15,10 +15,24 @@ class OrderController extends Controller
      * Place an order for the authenticated user.
      */
     public function index()
-    {
-        $orders =Order::all();
-        return view('admin.orders',['orders'=>$orders]);
-    }
+{
+    $query = Order::query();
+
+    // Paginate orders
+    $orders = $query->paginate(10);
+
+    // Reset the query to avoid counting issues
+    $ordersCollection = Order::all();
+
+    // Calculate counts
+    $pendingCount = $ordersCollection->where('status', 'pending')->count();
+    $deliveredCount = $ordersCollection->where('status', 'delivered')->count();
+    $canceledCount = $ordersCollection->where('status', 'canceled')->count();
+
+    return view('admin.orders', compact('orders', 'pendingCount', 'deliveredCount', 'canceledCount'));
+}
+
+
 
      /**
      * View details of a specific order.
@@ -157,16 +171,17 @@ public function placeOrder(Request $request)
     /**
      * Update the status of an order.
      */
-    public function updateStatus(Request $request, Order $order)
-    {
-        $request->validate([
-            'status' => 'required|string|in:pending,delivered,canceled',
-        ]);
+ // In web.php (routes file)
 
-        $order->update(['status' => $request->input('status')]);
 
-        return redirect()->back()->with('success', 'Order status updated successfully!');
-    }
+// In OrderController.php
+public function updateStatus(Request $request, Order $order)
+{
+    $order->status = $request->input('status');
+    $order->save();
+
+    return redirect()->back()->with('success', 'Order status updated successfully!');
+}
 
    
     

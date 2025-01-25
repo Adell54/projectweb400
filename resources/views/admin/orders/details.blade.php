@@ -2,12 +2,11 @@
 
 @section('content')
 
-
-
 <h5>Customer Information</h5>
 <p><strong>Name:</strong> {{ $order->user->name }}</p>
 <p><strong>Email:</strong> {{ $order->user->email }}</p>
 <p><strong>Phone:</strong> {{ $order->phone }}</p>
+<p><strong>Address:</strong> {{ $order->location }}</p>
 
 <h5>Order Information</h5>
 <p><strong>Order ID:</strong> #{{ $order->id }}</p>
@@ -17,7 +16,20 @@
         {{ ucfirst($order->status) }}
     </span>
 </p>
-<p><strong>Total:</strong> ${{ number_format($order->total_price, 2) }}</p>
+
+<h5>Change Order Status</h5>
+@foreach(['pending', 'delivered', 'canceled'] as $status)
+    @if($order->status !== $status)
+        <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to change the order status to {{ $status }}?');">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="status" value="{{ $status }}">
+            <button type="submit" class="btn btn-{{ $status == 'pending' ? 'warning' : ($status == 'delivered' ? 'success' : 'danger') }}">
+                {{ ucfirst($status) }}
+            </button>
+        </form>
+    @endif
+@endforeach
 
 <h5>Products</h5>
 <table class="table table-bordered">
@@ -30,14 +42,28 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($products as $item)
+        @foreach ($orderItems as $orderItem)
+            @php
+                $product = $products->find($orderItem->product_id);
+            @endphp
             <tr>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->quantity }}</td>
-                <td>${{ number_format($item->price, 2) }}</td>
-                <td>${{ number_format($item->quantity * $item->price, 2) }}</td>
+                <td>{{ $product->name }}</td>
+                <td>{{ $orderItem->quantity }}</td>
+                <td>${{ number_format($product->price, 2) }}</td>
+                <td>${{ number_format($orderItem->quantity * $product->price, 2) }}</td>
             </tr>
         @endforeach
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-end"><strong>Delivery Charge:</strong></td>
+            <td>${{ number_format(3, 2) }}</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+            <td>${{ number_format($order->total_price + 3, 2) }}</td>
+        </tr>
+    </tfoot>
 </table>
+
 @endsection

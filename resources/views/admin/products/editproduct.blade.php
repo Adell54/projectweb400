@@ -42,6 +42,12 @@
                             <input type="number" id="productPrice" name="price" class="form-control" value="{{ $product->price }}" step="0.01" min="0" required>
                         </div>
 
+
+                        <div class="form-group">
+                            <label for="productCost">Cost</label>
+                            <input type="number" id="productCost" name="cost" class="form-control" value="{{ $product->cost }}" step="0.01" min="0" required>
+                        </div>
+
                         <div class="form-group">
                             <label for="productCategory">Category</label>
                             <select id="productCategory" name="category" class="form-control">

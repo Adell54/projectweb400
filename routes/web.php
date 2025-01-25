@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
@@ -60,6 +61,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
     // Routes for Dashbaord
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::get('/revenue', [AdminController::class, 'showMetrics'])->name('admin.revenue');
 
     // Routes for Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');

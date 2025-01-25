@@ -122,6 +122,9 @@
                 <a href="{{route('admin.orders')}}" class="list-group-item list-group-item-action ">
                     <i class="fas fa-shopping-cart"></i> <span>Orders</span>
                 </a>
+                <a href="/admin/revenue" class="list-group-item list-group-item-action ">
+                    <i class="fas fa-dollar-sign"></i> <span>Revenue Insights</span> 
+                </a>
             </div>
         </div>
 

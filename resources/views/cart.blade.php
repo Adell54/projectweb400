@@ -78,17 +78,21 @@
                                 <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price), 2) }}</td>
                             </tr>
                             <tr class="total-data">
-                                <td><strong>Shipping: </strong></td>
-                                <td>$5.00</td>
+                                <td><strong>Delivery: </strong></td>
+                                <td>$3.00</td>
                             </tr>
                             <tr class="total-data">
                                 <td><strong>Total: </strong></td>
-                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 5, 2) }}</td>
+                                <td>${{ number_format($cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 3, 2) }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="cart-buttons">
-                        <a href="{{route('checkout')}}" class="boxed-btn black">Check Out</a>
+                        @if($cartItems->count() > 0)
+                            <a href="{{route('checkout')}}" class="boxed-btn black">Check Out</a>
+                        @else
+                            <a href="{{route('products.index')}}" class="boxed-btn black">Add Products to Cart</a>
+                        @endif
                     </div>
                 </div>
             </div>

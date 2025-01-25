@@ -1,69 +1,75 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\Category;
-use App\Models\Cart;
-use App\Models\Cart_items;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
+use App\Models\Order_items;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    public function showMetrics(Request $request)
+{
+    // Filter by date range (optional)
+    $startDate = $request->input('start_date') 
+        ? Carbon::parse($request->input('start_date')) 
+        : Carbon::now()->startOfMonth();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    $endDate = $request->input('end_date') 
+        ? Carbon::parse($request->input('end_date')) 
+        : Carbon::now()->endOfMonth();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // Revenue and Profit (Delivered Orders)
+    $deliveredOrders = Order::where('status', 'delivered')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    $totalRevenue = $deliveredOrders->sum('total_price'); // Assuming total_price column exists in the orders table
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    $totalProfit = $deliveredOrders->sum(function ($order) {
+        $orderItems = Order_items::where('order_id', $order->id)
+            ->with('product')
+            ->get();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        return $orderItems->sum(function ($item) {
+            $productCost = $item->product->cost ?? 0;
+            $productPrice = $item->product->price ?? 0;
+            return ($productPrice - $productCost) * $item->quantity;
+        });
+    });
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // Order Status Overview
+    $ordersByStatus = Order::whereBetween('created_at', [$startDate, $endDate])
+        ->selectRaw('status, COUNT(*) as count')
+        ->groupBy('status')
+        ->get()
+        ->keyBy('status');
+
+    // Best-Selling Products
+    $bestSellingProducts = Order_items::whereHas('order', function ($query) use ($startDate, $endDate) {
+        $query->where('status', 'delivered')
+            ->whereBetween('created_at', [$startDate, $endDate]);
+    })
+    ->with('product')
+    ->select('product_id')
+    ->selectRaw('SUM(quantity) as total_sold')
+    ->groupBy('product_id')
+    ->orderByDesc('total_sold')
+    ->take(5)
+    ->get();
+
+    return view('admin.profit', compact(
+        'totalRevenue',
+        'totalProfit',
+        'ordersByStatus',
+        'bestSellingProducts',
+        'startDate',
+        'endDate'
+    ));
+}
+
 }

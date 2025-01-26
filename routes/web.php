@@ -13,6 +13,9 @@ use App\Http\Controllers\CategoryController;
 
 
 
+
+
+
 // User Routes :
 Route::get('/home', [ProductController::class, 'home'])->name('home.index');
 Route::get('/', [ProductController::class, 'home'])->name('home.index');
@@ -60,7 +63,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
 
     // Routes for Dashbaord
-    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/revenue', [AdminController::class, 'showMetrics'])->name('admin.revenue');
 
     // Routes for Orders
@@ -105,6 +108,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+   
+
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.delete');

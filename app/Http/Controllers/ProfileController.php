@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+
 
 class ProfileController extends Controller
 {
@@ -25,38 +27,45 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $user = $request->user();
-    
-        if ($request->type === 'email') {
-            // Validate and update email
+    public function update(Request $request)
+{
+    // Ensure the user is authenticated
+    $user = Auth::user();
+
+    if (!($user instanceof \App\Models\User)) {
+        return redirect()->back()->withErrors(['Invalid user model.']);
+    }
+
+    switch ($request->input('type')) {
+        case 'email':
             $request->validate([
-                'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+                'email' => 'required|email|unique:users,email,' . $user->id,
             ]);
-    
+
             $user->email = $request->email;
-            $user->email_verified_at = null; // Mark email as unverified if changed
             $user->save();
-    
-            return Redirect::route('profile.edit')->with('status', 'Email updated successfully!');
-        }
-    
-        if ($request->type === 'password') {
-            // Validate and update password
+
+            return redirect()->back()->with('success', 'Email updated successfully.');
+
+        case 'password':
             $request->validate([
                 'current_password' => ['required', 'current_password'],
-                'password' => ['required', 'confirmed', 'min:8'],
+                'password' => 'required|string|min:8|confirmed',
             ]);
-    
+
             $user->password = bcrypt($request->password);
             $user->save();
-    
-            return Redirect::route('profile.edit')->with('status', 'Password updated successfully!');
-        }
-    
-        return Redirect::route('profile.edit')->with('status', 'No changes made.');
+
+            return redirect()->back()->with('success', 'Password updated successfully.');
+
+        default:
+            return redirect()->back()->withErrors(['Invalid update type.']);
     }
+}
+
+    
+    
+    
     
 
     /**

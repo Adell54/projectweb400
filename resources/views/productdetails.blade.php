@@ -27,7 +27,7 @@
                 <div class="single-product-content">
                     <h3>{{ $product->name }}</h3>
                     <p><strong>Category: </strong>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</p>
-                    <p class="single-product-pricing">$ {{ $product->price }}</p>
+                    <p class="single-product-pricing">$ {{number_format($product->price,1) }}</p>
                     <p>{{ $product->description }}</p>
                     <div class="single-product-form">
                         @if(Auth::check())
@@ -41,9 +41,9 @@
                                 </button>
                             </form>
                         @else
-                            <button class="cart-btn" data-toggle="modal" data-target="#loginModal">
+                            <a class="cart-btn" href="/login">
                                 <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
+                            </a>
                         @endif
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             <div class="col-lg-8 offset-lg-2 text-center">
                 <div class="section-title">
                     <h3><span class="orange-text">Related</span> Products</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p>
+                    <p>More Products From {{ $categoryMap[$product->category_id] ?? 'Unknown' }} Category</p>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
                     </div>
                     <h3>{{ $relatedProduct->name }}</h3>
                     <p class="product-price">
-                        <span>{{ $categoryMap[$relatedProduct->category_id] ?? 'Unknown' }}</span> ${{ $relatedProduct->price }}
+                        <span>{{ $categoryMap[$relatedProduct->category_id] ?? 'Unknown' }}</span> ${{ number_format($relatedProduct->price,1) }}
                     </p>
                     <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
                         @csrf
@@ -105,7 +105,7 @@
 <!-- end more products -->
 <script>
     function showLoginModal() {
-        $('#loginModal').modal('show');
+        window.location.href='/login';
     }
 </script>
 

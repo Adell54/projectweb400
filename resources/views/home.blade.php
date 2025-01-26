@@ -85,6 +85,12 @@
         object-fit: cover;
         border-radius: 10px;
     }
+    .product-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* You can adjust this value as needed */
+    }
 
     .cart-btn {
         margin-top: 15px;
@@ -102,7 +108,7 @@
     }
 </style>
 
-@include('components.login.register')
+
 <!-- Features List Section -->
 <div class="list-section pt-60 pb-25">
     <div class="container">
@@ -113,8 +119,8 @@
                         <i class="fas fa-shipping-fast"></i>
                     </div>
                     <div class="content">
-                        <h3>Free Shipping</h3>
-                        <p>When order over $75</p>
+                        <h3>Fast Delivery</h3>
+                        <p>Same day Delivery</p>
                     </div>
                 </div>
             </div>
@@ -135,8 +141,8 @@
                         <i class="fas fa-sync"></i>
                     </div>
                     <div class="content">
-                        <h3>Refund</h3>
-                        <p>Get refund within 3 days!</p>
+                        <h3>Easy to Use</h3>
+                        <p>Place an order with ease</p>
                     </div>
                 </div>
             </div>
@@ -172,8 +178,8 @@
                                 <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid">
                             </a>
                         </div>
-                        <h3>{{ $product->name }}</h3>
-                        <p class="product-price"><span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}</p>
+                        <h3 class="product-name">{{ $product->name }}</h3>
+                        <p class="product-price"><span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{number_format($product->price,1)  }}</p>
                         <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -183,7 +189,7 @@
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             @else
-                                <button type="button" class="cart-btn" onclick="showLoginModal()">
+                                <button type="button" class="cart-btn" onclick="showLogin()">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             @endif
@@ -196,8 +202,9 @@
 </div>
 
 <script>
-    function showLoginModal() {
-        $('#loginModal').modal('show');
+    
+    function showLogin() {
+        window.location.href='/login';
     }
 </script>
 

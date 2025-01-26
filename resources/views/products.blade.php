@@ -63,7 +63,12 @@
     .price-filter button:hover {
         background-color: darkorange;
     }
-
+    .product-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* You can adjust this value as needed */
+    }
     /* Product Cards */
     .single-product-item {
         display: flex;
@@ -164,9 +169,9 @@
                                 <img src="data:image/jpeg;base64,{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid">
                             </a>
                         </div>
-                        <h3>{{ $product->name }}</h3>
+                        <h3 class="product-name">{{ $product->name }}</h3>
                         <p class="product-price">
-                            <span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ $product->price }}
+                            <span>{{ $categoryMap[$product->category_id] ?? 'Unknown' }}</span> ${{ number_format($product->price,1) }}
                         </p>
                         <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form d-inline">
                             @csrf
@@ -177,7 +182,7 @@
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             @else
-                                <button type="button" class="cart-btn" onclick="showLoginModal()">
+                                <button type="button" class="cart-btn" onclick="showLogin()">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             @endif
@@ -195,8 +200,8 @@
 </div>
 
 <script>
-    function showLoginModal() {
-        $('#loginModal').modal('show');
+    function showLogin() {
+        window.location.href='/login';
     }
 </script>
 @endsection

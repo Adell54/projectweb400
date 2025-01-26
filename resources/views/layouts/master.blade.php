@@ -71,7 +71,7 @@
                 </a>
                 @else
                 <!-- Login/Register Button if Not Logged In -->
-                <a class="mobile-hide" href="#" data-toggle="modal" data-target="#loginModal">
+                <a class="mobile-hide" href="/login" >
                     <i class="fas fa-sign-in-alt"></i> Login/Register
                 </a>
                 @endauth
@@ -91,9 +91,7 @@
 	
 	<!-- end header -->
 
-<!-- Login/Register Modal -->
 
-@include('components.login.register')
 
 	
   
@@ -177,13 +175,14 @@
                 },
                 error: function (xhr) {
                     if (xhr.status === 401) {
-                        $('#loginModal').modal('show'); // Show the login modal if not authenticated
+                        window.location.href = '/login'; // Redirect to login page if not authenticated
                     }
                 }
             });
         });
     });
 </script>
+
 
 </body>
 </html>

@@ -144,7 +144,7 @@
     <!-- Order Tracking Section -->
     <div class="section">
         <div class="section-header">Track Orders</div>
-        <a href="" class="btn btn-info">Check Orders</a>
+        <a href="/profile/orders" class="btn btn-info">Check Orders</a>
     </div>
 
     <!-- Logout Section -->

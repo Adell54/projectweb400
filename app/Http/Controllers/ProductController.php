@@ -13,47 +13,55 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $query = Product::query();
-    
-        // Only include enabled products
-        $query->where('enabled', true);
-    
-        // Handle search
-        if ($request->has('search') && !empty($request->search)) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-    
-        // Handle category filter
-        if ($request->has('category') && !empty($request->category)) {
-            $query->where('category_id', $request->category);
-        }
-    
-        // Handle price filter
-        if ($request->has('min_price') || $request->has('max_price')) {
-            $query->whereBetween('price', [
-                $request->input('min_price', 0), 
-                $request->input('max_price', PHP_INT_MAX)
-            ]);
-        }
-    
-        // Paginate results
-        $products = $query->paginate(9);
-    
-        $categories = Category::select('id', 'name')->get();
-        $categoryMap = $categories->pluck('name', 'id');
-    
-        return view('products', [
-            'products' => $products,
-            'categoryMap' => $categoryMap,
-            'categories' => $categories,
+{
+    $query = Product::where('enabled', true)   // Include only enabled products
+                    ->whereHas('category', function ($q) {
+                        $q->where('enabled', true);   // Include only products in enabled categories
+                    });
+
+    // Handle search
+    if ($request->has('search') && !empty($request->search)) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    // Handle category filter
+    if ($request->has('category') && !empty($request->category)) {
+        $query->where('category_id', $request->category);
+    }
+
+    // Handle price filter
+    if ($request->has('min_price') || $request->has('max_price')) {
+        $query->whereBetween('price', [
+            $request->input('min_price', 0),
+            $request->input('max_price', PHP_INT_MAX)
         ]);
     }
+
+    // Paginate results
+    $products = $query->paginate(9);
+    $categories = Category::select('id', 'name')
+                          ->where('enabled', true)   // Only include enabled categories
+                          ->get();
+    $categoryMap = $categories->pluck('name', 'id');
+
+    return view('products', [
+        'products' => $products,
+        'categoryMap' => $categoryMap,
+        'categories' => $categories,
+    ]);
+}
+
+    
+    
+
     
 
 public function home(Request $request)
 {
-    $query = Product::query();
+    $query = Product::where('enabled', true)   // Only include enabled products
+                   ->whereHas('category', function($query) {
+                       $query->where('enabled', true);   // Only include products in enabled categories
+                   });
 
     // Handle search
     if ($request->has('search')) {
@@ -64,9 +72,12 @@ public function home(Request $request)
     if ($request->has('category')) {
         $query->where('category_id', $request->category);
     }
+
     // Paginate results
     $products = $query->paginate(6);
-    $categories = Category::select('id', 'name')->get();
+    $categories = Category::select('id', 'name')
+                          ->where('enabled', true)   // Only include enabled categories
+                          ->get();
     $categoryMap = $categories->pluck('name', 'id');
 
     return view('home', [
@@ -75,6 +86,7 @@ public function home(Request $request)
         'categories' => $categories,
     ]);
 }
+
 
 
 

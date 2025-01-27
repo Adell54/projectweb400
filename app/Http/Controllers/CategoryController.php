@@ -12,17 +12,21 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $categories = Category::all();
-        
-        foreach ($categories as $category) {
-            if ($category->image) {
-                $category->image = base64_encode($category->image);
-            }
+{
+    // Retrieve only enabled categories
+    $categories = Category::where('enabled', true)->get();
+    
+    // Encode images if they exist
+    foreach ($categories as $category) {
+        if ($category->image) {
+            $category->image = base64_encode($category->image);
         }
-        
-        return view('categories', ['categories' => $categories]);
     }
+    
+    // Return the view with the filtered categories
+    return view('categories', ['categories' => $categories]);
+}
+
 
 
 

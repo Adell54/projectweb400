@@ -44,7 +44,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [OrderController::class, 'showCheckout'])->name('checkout');
 
     Route::post('/checkout/place-order', [OrderController::class, 'placeOrder'])->name('placeOrder');
-    
 });
 
 
@@ -68,10 +67,6 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::get('/orders/details/{id}', [OrderController::class, 'showOrder'])->name('admin.orders.details');
     Route::patch('admin/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
-
-
-
-
 
     // Routes for Products
     Route::get('/products', [ProductController::class, 'adminview'])->name('admin.products');
@@ -101,9 +96,7 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () 
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
 
